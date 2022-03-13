@@ -1,0 +1,29 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/controle?useSSL=false&useTimezone=false&serverTimezone=UTC
+#    username: root
+#    password: 123321
+#    tomcat:
+#      max-active: 20
+#      max-idle: 100
+#      min-idle: 20
+#      initial-size: 20
+#      remove-abandoned: true
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+  compression:
+    enabled: true
+    mime-types:
+      - text/html
+      - text/xml
+      - text/plain
+      - text/css
+      - text/javascript
+      - application/javascript
+      - application/json
+    min-response-size: 1024
