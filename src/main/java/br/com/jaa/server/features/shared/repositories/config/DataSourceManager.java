@@ -15,12 +15,11 @@ public class DataSourceManager {
     }
 
     private DriverManagerDataSource initDefaultDatasource() {
-        String url = "jdbc:sqlite:data.db";
         DriverManagerDataSource ds = new DriverManagerDataSource();
-        ds.setDriverClassName("org.sqlite.JDBC");
-        ds.setUrl(url);
+        ds.setDriverClassName("org.h2.Driver");
+        ds.setUrl("jdbc:h2:./data");
         ds.setUsername("sa");
-        ds.setPassword("sa");
+        ds.setPassword("");
         return ds;
     }
 
