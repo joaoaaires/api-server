@@ -51,4 +51,5 @@ public class Usuario extends Audit {
     public void setDataHoraSyc(Timestamp dataHoraSyc) {
         this.dataHoraSyc = dataHoraSyc;
     }
+
 }
