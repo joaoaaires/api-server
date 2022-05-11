@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: run
 
 server:
   port: 8080
@@ -17,16 +17,17 @@ server:
       - application/javascript
       - application/json
     min-response-size: 1024
+
 ---
 spring:
-  profiles: dev
+  profiles: run
   main:
     allow-bean-definition-overriding: true
   datasource:
-    url: jdbc:h2:./data
-    username: sa
-    password:
-    driverClassName: org.h2.Driver
+    url: jdbc:mysql://localhost:3306/api?useSSL=false&zeroDateTimeBehavior=convertToNull&autoReconnect=true&tinyInt1isBit=false
+    username: root
+    password: 123321
+    driverClassName: org.mariadb.jdbc.Driver
 ---
 spring:
   profiles: test

@@ -2,12 +2,10 @@ package br.com.jaa.server.features.shared.entities;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
-@ActiveProfiles("test")
 class AuditTest {
 
     @Test

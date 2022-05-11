@@ -2,13 +2,10 @@ package br.com.jaa.server.features.usuario.entities;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-@ActiveProfiles("test")
 class UsuarioTest {
 
     @Test

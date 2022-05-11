@@ -3,9 +3,7 @@ package br.com.jaa.server.features.shared.models;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.ActiveProfiles;
 
-@ActiveProfiles("test")
 class ObjectResponseModelTest {
 
     @Test
