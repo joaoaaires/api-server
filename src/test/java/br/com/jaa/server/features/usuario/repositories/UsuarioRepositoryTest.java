@@ -1,56 +1,40 @@
 package br.com.jaa.server.features.usuario.repositories;
 
 import br.com.jaa.server.features.usuario.entities.Usuario;
+import br.com.jaa.server.fixtures.UsuarioFixture;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
 @SpringBootTest
+@Sql(
+        value = {"/scripts/usuario_script.sql"},
+        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+)
 class UsuarioRepositoryTest {
 
     @Autowired
     UsuarioRepository usuarioRepository;
 
-    Usuario usuario;
-
-    @BeforeEach
-    void setUp() {
-        usuarioRepository.createTable();
-
-        usuario = new Usuario();
-        usuario.setId(1L);
-        usuario.setEmail("joao.aires@gmail.com");
-        usuario.setPassword("123");
-        usuario.setSituacao(1);
-
-        try {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Timestamp dataHoraSyc = new Timestamp(formatter.parse("2022-04-09 12:09:00").getTime());
-            usuario.setDataHoraSyc(dataHoraSyc);
-            usuario.setDataHoraInc(dataHoraSyc);
-        }catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
     @Test
-    void testA() {
-        Usuario response = usuarioRepository.create(this.usuario);
+    void create() {
+        Usuario usuario = UsuarioFixture.getUsuarioNovo();
+        Usuario response = usuarioRepository.create(usuario);
 
         Assertions.assertEquals(usuario.getId(), response.getId());
         Assertions.assertEquals(usuario.getEmail(), response.getEmail());
+        Assertions.assertEquals(usuario.getPassword(), response.getPassword());
     }
 
     @Test
-    void testB() {
-        Long id = 1L;
-        Usuario response = usuarioRepository.readById(id);
+    void readById() {
+        Usuario usuario = UsuarioFixture.getUsuarioAntigo();
+        Usuario response = usuarioRepository.readById(usuario.getId());
 
         Assertions.assertEquals(usuario.getId(), response.getId());
         Assertions.assertEquals(usuario.getEmail(), response.getEmail());
@@ -58,17 +42,15 @@ class UsuarioRepositoryTest {
 
 
     @Test
-    void testC() throws Exception {
-        Long id = 1L;
+    void update() throws Exception {
+        Usuario usuario = UsuarioFixture.getUsuarioAntigo();
+
+        usuario.setPassword("123321");
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Timestamp dataHoraAlt = new Timestamp(formatter.parse("2022-05-02 12:09:00").getTime());
-
-        usuario.setPassword("987654");
         usuario.setDataHoraAlt(dataHoraAlt);
 
-        usuarioRepository.update(usuario);
-
-        Usuario response = usuarioRepository.readById(id);
+        Usuario response = usuarioRepository.update(usuario);
 
         Assertions.assertEquals(usuario.getId(), response.getId());
         Assertions.assertEquals(usuario.getPassword(), response.getPassword());
@@ -76,16 +58,17 @@ class UsuarioRepositoryTest {
     }
 
     @Test
-    void testD() throws Exception {
+    void delete() throws Exception {
+        Usuario usuario = UsuarioFixture.getUsuarioAntigo();
+
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Timestamp dataHoraDel = new Timestamp(formatter.parse("2022-05-02 12:09:00").getTime());
-
         usuario.setDataHoraDel(dataHoraDel);
 
         Usuario responseDelete = usuarioRepository.delete(usuario);
-        Usuario responseIsNull = usuarioRepository.readById(usuario.getId());
-
         Assertions.assertEquals(0L, responseDelete.getId());
+
+        Usuario responseIsNull = usuarioRepository.readById(usuario.getId());
         Assertions.assertNull(responseIsNull);
     }
 

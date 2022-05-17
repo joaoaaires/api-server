@@ -46,26 +46,12 @@ public class UsuarioRepository extends DefaultRepository {
     private static final String QUERY_DELETE = "DELETE FROM usuario\n" +
             "WHERE id = :ID;";
 
-    private static final String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS usuario (\n" +
-            "id INT PRIMARY KEY AUTO_INCREMENT,\n" +
-            "email VARCHAR(255) NOT NULL UNIQUE,\n" +
-            "password VARCHAR(255) NOT NULL,\n" +
-            "situacao INT NOT NULL,\n" +
-            "datahorasyc DATETIME NOT NULL,\n" +
-            "datahorainc DATETIME NOT NULL,\n" +
-            "datahoraalt DATETIME,\n" +
-            "datahoradel DATETIME\n" +
-            ");";
-
     public Usuario create(Usuario usuario) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         MapSqlParameterSource params = getMapSqlParameterSource(usuario);
         this.defaultNamedParameterJdbcTemplate.update(QUERY_CREATE, params, keyHolder);
         Number numberId = keyHolder.getKey();
-        if (numberId != null) {
-            long id = numberId.longValue();
-            usuario.setId(id);
-        }
+        usuario.setId(numberId.longValue());
         return usuario;
     }
 
@@ -86,10 +72,6 @@ public class UsuarioRepository extends DefaultRepository {
         this.defaultNamedParameterJdbcTemplate.update(QUERY_DELETE, params);
         usuario.setId(0L);
         return usuario;
-    }
-
-    public void createTable() {
-        this.defaultJdbcTemplate.execute(CREATE_TABLE);
     }
 
     private RowMapper<Usuario> rowMapper = (rs, rowNum) -> {

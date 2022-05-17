@@ -1,6 +1,5 @@
 package br.com.jaa.server.features.shared.utils;
 
-import br.com.jaa.server.core.util.ExceptionUtil;
 import br.com.jaa.server.features.shared.models.ObjectResponseModel;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

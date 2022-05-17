@@ -2,70 +2,110 @@ package br.com.jaa.server.features.usuario.services;
 
 import br.com.jaa.server.features.shared.models.ObjectResponseModel;
 import br.com.jaa.server.features.usuario.entities.Usuario;
+import br.com.jaa.server.fixtures.ObjectResponseFixture;
+import br.com.jaa.server.fixtures.UsuarioFixture;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
 @SpringBootTest
+@Sql(
+        value = {"/scripts/usuario_script.sql"},
+        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+)
 class UsuarioServiceTest {
 
-    @Mock
+    @Autowired
     UsuarioService usuarioService;
 
-    Usuario usuario;
+    @Test
+    void create() {
+        Usuario usuario = UsuarioFixture.getUsuarioNovo();
+        ObjectResponseModel<Usuario> objectResponseExpected = ObjectResponseFixture.getObjectResponse(
+                HttpStatus.OK,
+                usuario
+        );
 
-    @BeforeEach
-    void setUp() {
-        usuario = new Usuario();
-        usuario.setId(1L);
-        usuario.setEmail("joao.aires@gmail.com");
-        usuario.setPassword("123");
-        usuario.setSituacao(1);
+        ObjectResponseModel<Usuario> objectResponseActual = usuarioService.create(usuario);
+        assertionsObjectResponseModel(objectResponseExpected, objectResponseActual);
 
-        try {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Timestamp dataHoraSyc = new Timestamp(formatter.parse("2022-04-09 12:09:00").getTime());
-            usuario.setDataHoraSyc(dataHoraSyc);
-            usuario.setDataHoraInc(dataHoraSyc);
-        }catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        Usuario usuarioActual = objectResponseActual.getData();
+        assertionsUsuario(usuario, usuarioActual);
     }
 
     @Test
-    void testA() {
-        ObjectResponseModel<Usuario> response = new ObjectResponseModel<>(HttpStatus.OK);
-        response.setData(usuario);
+    void readById() {
+        Usuario usuario = UsuarioFixture.getUsuarioAntigo();
+        ObjectResponseModel<Usuario> objectResponseExpected = ObjectResponseFixture.getObjectResponse(
+                HttpStatus.OK,
+                usuario
+        );
 
-        Mockito.when(usuarioService.create(Mockito.any())).then(invocationOnMock -> response);
+        ObjectResponseModel<Usuario> objectResponseActual = usuarioService.readById(usuario.getId());
+        assertionsObjectResponseModel(objectResponseExpected, objectResponseActual);
 
-        ObjectResponseModel<Usuario> responseModel = usuarioService.create(usuario);
-
-        Assertions.assertEquals(response.getStatus(), responseModel.getStatus());
-        Assertions.assertEquals(response.getData(), responseModel.getData());
-        Assertions.assertNull(responseModel.getMessage());
-    }
-
-    @Test
-    void testB() {
+        Usuario usuarioActual = objectResponseActual.getData();
+        assertionsUsuario(usuario, usuarioActual);
     }
 
 
     @Test
-    void testC() throws Exception {
+    void update() throws Exception {
+        Usuario usuario = UsuarioFixture.getUsuarioAntigo();
+
+        usuario.setPassword("123321");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Timestamp dataHoraAlt = new Timestamp(formatter.parse("2022-05-02 12:09:00").getTime());
+        usuario.setDataHoraAlt(dataHoraAlt);
+
+        ObjectResponseModel<Usuario> objectResponseExpected = ObjectResponseFixture.getObjectResponse(
+                HttpStatus.OK,
+                usuario
+        );
+
+        ObjectResponseModel<Usuario> objectResponseActual = usuarioService.update(usuario);
+        assertionsObjectResponseModel(objectResponseExpected, objectResponseActual);
+
+        Usuario usuarioActual = objectResponseActual.getData();
+        assertionsUsuario(usuario, usuarioActual);
     }
 
     @Test
-    void testD() throws Exception {
+    void delete() throws Exception {
+        Usuario usuario = UsuarioFixture.getUsuarioAntigo();
 
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Timestamp dataHoraAlt = new Timestamp(formatter.parse("2022-05-02 12:09:00").getTime());
+        usuario.setDataHoraDel(dataHoraAlt);
+
+        ObjectResponseModel<Usuario> objectResponseExpected = ObjectResponseFixture.getObjectResponse(
+                HttpStatus.OK,
+                usuario
+        );
+
+        ObjectResponseModel<Usuario> objectResponseActual = usuarioService.delete(usuario);
+        assertionsObjectResponseModel(objectResponseExpected, objectResponseActual);
+
+        Usuario usuarioActual = objectResponseActual.getData();
+        assertionsUsuario(usuario, usuarioActual);
+    }
+
+    private void assertionsObjectResponseModel(ObjectResponseModel<Usuario> objectResponseExpected, ObjectResponseModel<Usuario> objectResponseActual) {
+        Assertions.assertEquals(objectResponseExpected.getStatus(), objectResponseActual.getStatus());
+        Assertions.assertNotNull(objectResponseExpected.getData());
+        Assertions.assertNull(objectResponseExpected.getMessage());
+    }
+
+    private void assertionsUsuario(Usuario usuario, Usuario usuarioActual) {
+        Assertions.assertEquals(usuario.getId(), usuarioActual.getId());
+        Assertions.assertEquals(usuario.getEmail(), usuarioActual.getEmail());
+        Assertions.assertEquals(usuario.getPassword(), usuarioActual.getPassword());
     }
 
 }
