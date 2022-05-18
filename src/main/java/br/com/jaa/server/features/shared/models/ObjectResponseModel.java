@@ -3,6 +3,8 @@ package br.com.jaa.server.features.shared.models;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.http.HttpStatus;
 
+import java.io.Serializable;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ObjectResponseModel<T> {
 
@@ -10,16 +12,12 @@ public class ObjectResponseModel<T> {
     private T data;
     private String message;
 
-    public ObjectResponseModel(HttpStatus status) {
-        this.status = status.value();
-    }
-
     public int getStatus() {
         return status;
     }
 
-    public void setStatus(HttpStatus status) {
-        this.status = status.value();
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public T getData() {

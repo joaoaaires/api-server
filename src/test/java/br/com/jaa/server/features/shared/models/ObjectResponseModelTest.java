@@ -11,7 +11,8 @@ class ObjectResponseModelTest {
         String message = "Message";
         String data = "Data";
 
-        ObjectResponseModel<String> responseModel = new ObjectResponseModel<>(HttpStatus.OK);
+        ObjectResponseModel<String> responseModel = new ObjectResponseModel<>();
+        responseModel.setStatus(HttpStatus.OK.value());
         responseModel.setMessage(message);
         responseModel.setData(data);
 
@@ -25,8 +26,8 @@ class ObjectResponseModelTest {
         String message = "Message";
         String data = "Data";
 
-        ObjectResponseModel<String> responseModel = new ObjectResponseModel<>(HttpStatus.OK);
-        responseModel.setStatus(HttpStatus.FORBIDDEN);
+        ObjectResponseModel<String> responseModel = new ObjectResponseModel<>();
+        responseModel.setStatus(HttpStatus.FORBIDDEN.value());
         responseModel.setMessage(message);
         responseModel.setData(data);
 

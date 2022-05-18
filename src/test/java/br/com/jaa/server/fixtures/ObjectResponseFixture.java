@@ -14,7 +14,8 @@ public class ObjectResponseFixture {
     }
 
     public static <T> ObjectResponseModel<T> getObjectResponse(HttpStatus status, String message, T data) {
-        ObjectResponseModel<T> response = new ObjectResponseModel<>(status);
+        ObjectResponseModel<T> response = new ObjectResponseModel<>();
+        response.setStatus(status.value());
         response.setMessage(message);
         response.setData(data);
         return response;

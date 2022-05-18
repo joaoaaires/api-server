@@ -2,37 +2,67 @@ package br.com.jaa.server.features.usuario.controllers;
 
 import br.com.jaa.server.features.shared.models.ObjectResponseModel;
 import br.com.jaa.server.features.usuario.entities.Usuario;
-import br.com.jaa.server.fixtures.ObjectResponseFixture;
+import br.com.jaa.server.features.usuario.models.UsuarioModel;
+import br.com.jaa.server.features.usuario.entities.UsuarioFixture;
+import br.com.jaa.server.features.usuario.models.UsuarioModelFixture;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 
-@SpringBootTest
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+)
 @Sql(
         value = {"/scripts/usuario_script.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
 )
-public class UsuarioControllerTest {
+class UsuarioControllerTest {
+
+    @LocalServerPort
+    private int port;
 
     @Autowired
-    UsuarioController usuarioController;
+    private TestRestTemplate testRestTemplate;
+
+    private String url;
+
+    @BeforeEach
+    void setUp() {
+        url = "http://localhost:" + port + "/usuario";
+    }
 
     @Test
-    void create() {
-        ObjectResponseModel<String> objectResponseExpected = ObjectResponseFixture.getObjectResponse(
-                HttpStatus.OK,
-                null,
-                null
+    void saveCreate() {
+        UsuarioModel usuarioModel = UsuarioModelFixture.getUsuarioModelCreate();
+        usuarioModel.setId(0L);
+
+        ResponseEntity<ObjectResponseModel> responseEntity = testRestTemplate.postForEntity(
+                url,
+                usuarioModel,
+                ObjectResponseModel.class
         );
+        Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
-        ResponseEntity<ObjectResponseModel<String>> responseEntityActual = usuarioController.create();
-        ObjectResponseModel<String> objectResponseActual = responseEntityActual.getBody();
+        ObjectResponseModel objectResponseModel = responseEntity.getBody();
+        Assertions.assertEquals(HttpStatus.OK.value(), objectResponseModel.getStatus());
 
-        assertionsObjectResponseModel(objectResponseExpected, objectResponseActual);
+        //Assertions.assertNotNull(objectResponseModel.getData());
+
+//        System.out.println(responseEntity);
+//
+//        Assertions.assertNotNull(responseEntity);
+
+//        UsuarioModel usuarioModelActual = objectResponseModel.getData();
+//        Assertions.assertEquals(usuarioModel.getId(), usuarioModelActual.getId());
+//        Assertions.assertEquals(usuarioModel.getEmail(), usuarioModelActual.getEmail());
+//        Assertions.assertEquals(usuarioModel.getPassword(), usuarioModelActual.getPassword());
     }
 
     @Test

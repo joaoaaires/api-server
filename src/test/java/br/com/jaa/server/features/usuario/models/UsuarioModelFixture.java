@@ -1,15 +1,15 @@
-package br.com.jaa.server.fixtures;
+package br.com.jaa.server.features.usuario.models;
 
 import br.com.jaa.server.features.usuario.entities.Usuario;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
-public class UsuarioFixture {
+public class UsuarioModelFixture {
 
-    public static Usuario getUsuarioNovo() {
-        Usuario usuario = new Usuario();
-        usuario.setId(6L);
+    public static UsuarioModel getUsuarioModelCreate() {
+        UsuarioModel usuario = new UsuarioModel();
+        usuario.setId(0L);
         usuario.setEmail("joao.aires@gmail.com");
         usuario.setPassword("123");
         usuario.setSituacao(1);
@@ -26,8 +26,8 @@ public class UsuarioFixture {
         return usuario;
     }
 
-    public static Usuario getUsuarioAntigo() {
-        Usuario usuario = new Usuario();
+    public static UsuarioModel getUsuarioModel() {
+        UsuarioModel usuario = new UsuarioModel();
         usuario.setId(2L);
         usuario.setEmail("pede.malesuada@aol.ca");
         usuario.setPassword("123321");

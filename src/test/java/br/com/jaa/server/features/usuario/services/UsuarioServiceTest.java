@@ -2,8 +2,10 @@ package br.com.jaa.server.features.usuario.services;
 
 import br.com.jaa.server.features.shared.models.ObjectResponseModel;
 import br.com.jaa.server.features.usuario.entities.Usuario;
+import br.com.jaa.server.features.usuario.models.UsuarioModel;
+import br.com.jaa.server.features.usuario.models.UsuarioModelFixture;
 import br.com.jaa.server.fixtures.ObjectResponseFixture;
-import br.com.jaa.server.fixtures.UsuarioFixture;
+import br.com.jaa.server.features.usuario.entities.UsuarioFixture;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,86 +28,92 @@ class UsuarioServiceTest {
 
     @Test
     void create() {
-        Usuario usuario = UsuarioFixture.getUsuarioNovo();
-        ObjectResponseModel<Usuario> objectResponseExpected = ObjectResponseFixture.getObjectResponse(
-                HttpStatus.OK,
-                usuario
-        );
+        UsuarioModel usuarioExpected = UsuarioModelFixture.getUsuarioModelCreate();
 
-        ObjectResponseModel<Usuario> objectResponseActual = usuarioService.create(usuario);
-        assertionsObjectResponseModel(objectResponseExpected, objectResponseActual);
+        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.create(usuarioExpected);
 
-        Usuario usuarioActual = objectResponseActual.getData();
-        assertionsUsuario(usuario, usuarioActual);
+        assertionsObjectResponseModel(objectResponseActual);
     }
 
     @Test
-    void readById() {
-        Usuario usuario = UsuarioFixture.getUsuarioAntigo();
-        ObjectResponseModel<Usuario> objectResponseExpected = ObjectResponseFixture.getObjectResponse(
-                HttpStatus.OK,
-                usuario
-        );
+    void readByIdOk() {
+       UsuarioModel usuarioExpected = UsuarioModelFixture.getUsuarioModel();
 
-        ObjectResponseModel<Usuario> objectResponseActual = usuarioService.readById(usuario.getId());
-        assertionsObjectResponseModel(objectResponseExpected, objectResponseActual);
+        String id = String.valueOf(usuarioExpected.getId());
+        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.readById(id);
 
-        Usuario usuarioActual = objectResponseActual.getData();
-        assertionsUsuario(usuario, usuarioActual);
+        assertionsObjectResponseModel(objectResponseActual);
+    }
+
+    @Test
+    void readByIdError() {
+        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.readById("");
+
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
+        Assertions.assertNotNull(objectResponseActual.getMessage());
+        Assertions.assertEquals("ID INCORRETO", objectResponseActual.getMessage());
+        Assertions.assertNull(objectResponseActual.getData());
     }
 
 
     @Test
     void update() throws Exception {
-        Usuario usuario = UsuarioFixture.getUsuarioAntigo();
-
-        usuario.setPassword("123321");
+        UsuarioModel usuarioExpected = UsuarioModelFixture.getUsuarioModel();
+        usuarioExpected.setPassword("123321");
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Timestamp dataHoraAlt = new Timestamp(formatter.parse("2022-05-02 12:09:00").getTime());
-        usuario.setDataHoraAlt(dataHoraAlt);
+        usuarioExpected.setDataHoraAlt(dataHoraAlt);
 
-        ObjectResponseModel<Usuario> objectResponseExpected = ObjectResponseFixture.getObjectResponse(
-                HttpStatus.OK,
-                usuario
-        );
+        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.update(usuarioExpected);
 
-        ObjectResponseModel<Usuario> objectResponseActual = usuarioService.update(usuario);
-        assertionsObjectResponseModel(objectResponseExpected, objectResponseActual);
-
-        Usuario usuarioActual = objectResponseActual.getData();
-        assertionsUsuario(usuario, usuarioActual);
+        assertionsObjectResponseModel(objectResponseActual);
     }
 
     @Test
     void delete() throws Exception {
-        Usuario usuario = UsuarioFixture.getUsuarioAntigo();
-
+        UsuarioModel usuarioExpected = UsuarioModelFixture.getUsuarioModel();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Timestamp dataHoraAlt = new Timestamp(formatter.parse("2022-05-02 12:09:00").getTime());
-        usuario.setDataHoraDel(dataHoraAlt);
+        usuarioExpected.setDataHoraDel(dataHoraAlt);
 
-        ObjectResponseModel<Usuario> objectResponseExpected = ObjectResponseFixture.getObjectResponse(
-                HttpStatus.OK,
-                usuario
-        );
+        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.delete(usuarioExpected);
 
-        ObjectResponseModel<Usuario> objectResponseActual = usuarioService.delete(usuario);
-        assertionsObjectResponseModel(objectResponseExpected, objectResponseActual);
-
-        Usuario usuarioActual = objectResponseActual.getData();
-        assertionsUsuario(usuario, usuarioActual);
+        assertionsObjectResponseModel(objectResponseActual);
     }
 
-    private void assertionsObjectResponseModel(ObjectResponseModel<Usuario> objectResponseExpected, ObjectResponseModel<Usuario> objectResponseActual) {
-        Assertions.assertEquals(objectResponseExpected.getStatus(), objectResponseActual.getStatus());
-        Assertions.assertNotNull(objectResponseExpected.getData());
-        Assertions.assertNull(objectResponseExpected.getMessage());
+    @Test
+    void saveCreateZero() {
+        UsuarioModel usuarioExpected = UsuarioModelFixture.getUsuarioModelCreate();
+        usuarioExpected.setId(0L);
+
+        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.save(usuarioExpected);
+
+        assertionsObjectResponseModel(objectResponseActual);
     }
 
-    private void assertionsUsuario(Usuario usuario, Usuario usuarioActual) {
-        Assertions.assertEquals(usuario.getId(), usuarioActual.getId());
-        Assertions.assertEquals(usuario.getEmail(), usuarioActual.getEmail());
-        Assertions.assertEquals(usuario.getPassword(), usuarioActual.getPassword());
+    @Test
+    void saveCreateNull() {
+        UsuarioModel usuarioExpected = UsuarioModelFixture.getUsuarioModelCreate();
+        usuarioExpected.setId(null);
+
+        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.save(usuarioExpected);
+
+        assertionsObjectResponseModel(objectResponseActual);
+    }
+
+    @Test
+    void saveUpdate() {
+        UsuarioModel usuarioExpected = UsuarioModelFixture.getUsuarioModel();
+
+        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.save(usuarioExpected);
+
+        assertionsObjectResponseModel(objectResponseActual);
+    }
+
+    private void assertionsObjectResponseModel(ObjectResponseModel<UsuarioModel> objectResponseActual) {
+        Assertions.assertEquals(HttpStatus.OK.value(), objectResponseActual.getStatus());
+        Assertions.assertNotNull(objectResponseActual.getData());
+        Assertions.assertNull(objectResponseActual.getMessage());
     }
 
 }

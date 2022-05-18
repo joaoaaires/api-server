@@ -1,7 +1,8 @@
 package br.com.jaa.server.features.usuario.repositories;
 
 import br.com.jaa.server.features.usuario.entities.Usuario;
-import br.com.jaa.server.fixtures.UsuarioFixture;
+import br.com.jaa.server.features.usuario.entities.UsuarioFixture;
+import br.com.jaa.server.features.usuario.models.UsuarioModel;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,53 +24,86 @@ class UsuarioRepositoryTest {
 
     @Test
     void create() {
-        Usuario usuario = UsuarioFixture.getUsuarioNovo();
-        Usuario response = usuarioRepository.create(usuario);
+        Usuario usuarioExpected = UsuarioFixture.getUsuarioCreate();
 
-        Assertions.assertEquals(usuario.getId(), response.getId());
-        Assertions.assertEquals(usuario.getEmail(), response.getEmail());
-        Assertions.assertEquals(usuario.getPassword(), response.getPassword());
+        Usuario  usuario = usuarioRepository.create(usuarioExpected);
+
+        Assertions.assertNotEquals(0L, usuario.getId());
+
+        Usuario usuarioActual = usuarioRepository.readById(usuario.getId());
+
+        Assertions.assertNotNull(usuarioActual);
+        assertionsUsuario(usuarioExpected, usuarioActual);
     }
 
     @Test
     void readById() {
-        Usuario usuario = UsuarioFixture.getUsuarioAntigo();
-        Usuario response = usuarioRepository.readById(usuario.getId());
+        Usuario usuarioExpected = UsuarioFixture.getUsuario();
 
-        Assertions.assertEquals(usuario.getId(), response.getId());
-        Assertions.assertEquals(usuario.getEmail(), response.getEmail());
+        Usuario usuarioActual = usuarioRepository.readById(2L);
+
+        assertionsUsuario(usuarioExpected, usuarioActual);
     }
 
 
     @Test
     void update() throws Exception {
-        Usuario usuario = UsuarioFixture.getUsuarioAntigo();
-
-        usuario.setPassword("123321");
+        Usuario usuarioExpected = UsuarioFixture.getUsuario();
+        usuarioExpected.setPassword("123321");
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Timestamp dataHoraAlt = new Timestamp(formatter.parse("2022-05-02 12:09:00").getTime());
-        usuario.setDataHoraAlt(dataHoraAlt);
+        usuarioExpected.setDataHoraAlt(dataHoraAlt);
 
-        Usuario response = usuarioRepository.update(usuario);
+        Usuario usuario = usuarioRepository.update(usuarioExpected);
 
-        Assertions.assertEquals(usuario.getId(), response.getId());
-        Assertions.assertEquals(usuario.getPassword(), response.getPassword());
-        Assertions.assertEquals(usuario.getDataHoraAlt(), response.getDataHoraAlt());
+        Assertions.assertNotNull(usuario);
+
+        Usuario usuarioActual = usuarioRepository.readById(usuario.getId());
+
+        Assertions.assertNotNull(usuarioActual);
+        assertionsUsuario(usuarioExpected, usuarioActual);
     }
 
     @Test
     void delete() throws Exception {
-        Usuario usuario = UsuarioFixture.getUsuarioAntigo();
-
+        Usuario usuarioExpected = UsuarioFixture.getUsuario();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Timestamp dataHoraDel = new Timestamp(formatter.parse("2022-05-02 12:09:00").getTime());
-        usuario.setDataHoraDel(dataHoraDel);
+        usuarioExpected.setDataHoraDel(dataHoraDel);
 
-        Usuario responseDelete = usuarioRepository.delete(usuario);
-        Assertions.assertEquals(0L, responseDelete.getId());
+        Usuario usuario = usuarioRepository.delete(usuarioExpected);
 
-        Usuario responseIsNull = usuarioRepository.readById(usuario.getId());
-        Assertions.assertNull(responseIsNull);
+        Assertions.assertEquals(0L, usuario.getId());
+
+        Usuario usuarioActual = usuarioRepository.readById(usuario.getId());
+
+        Assertions.assertNull(usuarioActual);
+    }
+
+    private void assertionsUsuario(Usuario usuarioExpected, Usuario usuarioActual) {
+        Assertions.assertNotNull(usuarioActual.getId());
+        Assertions.assertEquals(usuarioExpected.getId(), usuarioActual.getId());
+
+        Assertions.assertNotNull(usuarioActual.getEmail());
+        Assertions.assertEquals(usuarioExpected.getEmail(), usuarioActual.getEmail());
+
+        Assertions.assertNotNull(usuarioActual.getPassword());
+        Assertions.assertEquals(usuarioExpected.getPassword(), usuarioActual.getPassword());
+
+        Assertions.assertNotNull(usuarioActual.getSituacao());
+        Assertions.assertEquals(usuarioExpected.getSituacao(), usuarioActual.getSituacao());
+
+        Assertions.assertNotNull(usuarioActual.getDataHoraSyc());
+        Assertions.assertEquals(usuarioExpected.getDataHoraSyc(), usuarioActual.getDataHoraSyc());
+
+        Assertions.assertNotNull(usuarioActual.getDataHoraInc());
+        Assertions.assertEquals(usuarioExpected.getDataHoraInc(), usuarioActual.getDataHoraInc());
+
+        Assertions.assertNotNull(usuarioActual.getDataHoraAlt());
+        Assertions.assertEquals(usuarioExpected.getDataHoraAlt(), usuarioActual.getDataHoraAlt());
+
+        Assertions.assertNotNull(usuarioActual.getDataHoraDel());
+        Assertions.assertEquals(usuarioExpected.getDataHoraDel(), usuarioActual.getDataHoraDel());
     }
 
 }

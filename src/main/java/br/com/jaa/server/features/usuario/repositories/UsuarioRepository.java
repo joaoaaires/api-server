@@ -51,7 +51,7 @@ public class UsuarioRepository extends DefaultRepository {
         MapSqlParameterSource params = getMapSqlParameterSource(usuario);
         this.defaultNamedParameterJdbcTemplate.update(QUERY_CREATE, params, keyHolder);
         Number numberId = keyHolder.getKey();
-        usuario.setId(numberId.longValue());
+        usuario.setId(numberId != null ? numberId.longValue() : 0L);
         return usuario;
     }
 
