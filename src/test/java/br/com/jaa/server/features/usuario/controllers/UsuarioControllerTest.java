@@ -16,6 +16,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Map;
+
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
@@ -38,32 +43,7 @@ class UsuarioControllerTest {
         url = "http://localhost:" + port + "/usuario";
     }
 
-    @Test
-    void saveCreate() {
-        UsuarioModel usuarioModel = UsuarioModelFixture.getUsuarioModelCreate();
-        usuarioModel.setId(0L);
 
-        ResponseEntity<ObjectResponseModel> responseEntity = testRestTemplate.postForEntity(
-                url,
-                usuarioModel,
-                ObjectResponseModel.class
-        );
-        Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-
-        ObjectResponseModel objectResponseModel = responseEntity.getBody();
-        Assertions.assertEquals(HttpStatus.OK.value(), objectResponseModel.getStatus());
-
-        //Assertions.assertNotNull(objectResponseModel.getData());
-
-//        System.out.println(responseEntity);
-//
-//        Assertions.assertNotNull(responseEntity);
-
-//        UsuarioModel usuarioModelActual = objectResponseModel.getData();
-//        Assertions.assertEquals(usuarioModel.getId(), usuarioModelActual.getId());
-//        Assertions.assertEquals(usuarioModel.getEmail(), usuarioModelActual.getEmail());
-//        Assertions.assertEquals(usuarioModel.getPassword(), usuarioModelActual.getPassword());
-    }
 
     @Test
     void readById() {
@@ -120,6 +100,62 @@ class UsuarioControllerTest {
 //
 //        Usuario usuarioActual = objectResponseActual.getData();
 //        assertionsUsuario(usuario, usuarioActual);
+    }
+
+    @Test
+    void saveCreate() {
+        UsuarioModel usuarioModel = UsuarioModelFixture.getUsuarioModelCreate();
+
+        ResponseEntity<ObjectResponseModel> responseEntity = testRestTemplate.postForEntity(
+                url,
+                usuarioModel,
+                ObjectResponseModel.class
+        );
+
+        Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+        ObjectResponseModel objectResponseModel = responseEntity.getBody();
+
+        Assertions.assertEquals(HttpStatus.OK.value(), objectResponseModel.getStatus());
+        Assertions.assertNotNull(objectResponseModel.getData());
+
+        Map<String, Object> data = (Map<String, Object>) objectResponseModel.getData();
+
+        Assertions.assertEquals(4, data.size());
+        Assertions.assertEquals(6, data.get("id"));
+        Assertions.assertEquals(usuarioModel.getEmail(), data.get("email"));
+        Assertions.assertEquals(1, usuarioModel.getSituacao());
+        Assertions.assertEquals("2022-04-09T15:09:00.000+00:00", data.get("dataHoraSyc"));
+    }
+
+    @Test
+    void saveUpdate() throws Exception {
+        UsuarioModel usuarioModel = UsuarioModelFixture.getUsuarioModel();
+        usuarioModel.setSituacao(1);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Timestamp dataHoraSyc = new Timestamp(formatter.parse("2022-05-02 12:09:00").getTime());
+        usuarioModel.setDataHoraSyc(dataHoraSyc);
+
+        ResponseEntity<ObjectResponseModel> responseEntity = testRestTemplate.postForEntity(
+                url,
+                usuarioModel,
+                ObjectResponseModel.class
+        );
+
+        Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+        ObjectResponseModel objectResponseModel = responseEntity.getBody();
+
+        Assertions.assertEquals(HttpStatus.OK.value(), objectResponseModel.getStatus());
+        Assertions.assertNotNull(objectResponseModel.getData());
+
+        Map<String, Object> data = (Map<String, Object>) objectResponseModel.getData();
+
+        Assertions.assertEquals(4, data.size());
+        Assertions.assertEquals(2, data.get("id"));
+        Assertions.assertEquals(usuarioModel.getEmail(), data.get("email"));
+        Assertions.assertEquals(usuarioModel.getSituacao(), data.get("situacao"));
+        Assertions.assertEquals("2022-05-02T12:09:00.000+00:00", data.get("dataHoraSyc"));
     }
 
     private void assertionsObjectResponseModel(ObjectResponseModel<String> objectResponseExpected, ObjectResponseModel<String> objectResponseActual) {

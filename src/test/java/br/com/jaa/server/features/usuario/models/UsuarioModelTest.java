@@ -1,5 +1,7 @@
 package br.com.jaa.server.features.usuario.models;
 
+import br.com.jaa.server.features.usuario.entities.Usuario;
+import br.com.jaa.server.features.usuario.entities.UsuarioFixture;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +11,7 @@ import java.text.SimpleDateFormat;
 class UsuarioModelTest {
 
     @Test
-    void testUsuarioModel() throws Exception {
+    void constructor() throws Exception {
         UsuarioModel usuario = new UsuarioModel();
         usuario.setId(1L);
         usuario.setEmail("joao.aires@gmail.com");
@@ -25,6 +27,30 @@ class UsuarioModelTest {
         Assertions.assertEquals("123", usuario.getPassword());
         Assertions.assertEquals(1, usuario.getSituacao());
         Assertions.assertEquals(dataHoraSyc, usuario.getDataHoraSyc());
+    }
+
+    @Test
+    void fromUsuario() throws Exception {
+        Usuario usuarioExpected = UsuarioFixture.getUsuario();
+        UsuarioModel usuarioActual = UsuarioModel.fromUsuario(usuarioExpected);
+
+        Assertions.assertNotNull(usuarioActual.getId());
+        Assertions.assertEquals(usuarioExpected.getId(), usuarioActual.getId());
+
+        Assertions.assertNotNull(usuarioActual.getEmail());
+        Assertions.assertEquals(usuarioExpected.getEmail(), usuarioActual.getEmail());
+
+        Assertions.assertNull(usuarioActual.getPassword());
+
+        Assertions.assertNotNull(usuarioActual.getSituacao());
+        Assertions.assertEquals(usuarioExpected.getSituacao(), usuarioActual.getSituacao());
+
+        Assertions.assertNotNull(usuarioActual.getDataHoraSyc());
+        Assertions.assertEquals(usuarioExpected.getDataHoraSyc(), usuarioActual.getDataHoraSyc());
+
+        Assertions.assertNull(usuarioActual.getDataHoraInc());
+        Assertions.assertNull(usuarioActual.getDataHoraAlt());
+        Assertions.assertNull(usuarioActual.getDataHoraDel());
     }
 
 }
