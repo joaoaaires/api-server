@@ -1,6 +1,8 @@
 spring:
   main:
     allow-bean-definition-overriding: true
+  jackson:
+    property-naming-strategy: LOWER_CASE
   datasource:
     url: jdbc:mysql://localhost:3306/api?useSSL=false&zeroDateTimeBehavior=convertToNull&autoReconnect=true&tinyInt1isBit=false
     username: server

@@ -1,6 +1,8 @@
 spring:
   main:
     allow-bean-definition-overriding: true
+  jackson:
+    property-naming-strategy: LOWER_CASE
   datasource:
     #    url: jdbc:h2:./data
     username: sa
