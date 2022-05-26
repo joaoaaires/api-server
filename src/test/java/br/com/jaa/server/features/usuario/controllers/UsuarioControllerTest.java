@@ -43,8 +43,6 @@ class UsuarioControllerTest {
         url = "http://localhost:" + port + "/usuario";
     }
 
-
-
     @Test
     void readById() {
 //        Usuario usuario = UsuarioFixture.getUsuarioAntigo();
@@ -125,7 +123,7 @@ class UsuarioControllerTest {
         Assertions.assertEquals(6, data.get("id"));
         Assertions.assertEquals(usuarioModel.getEmail(), data.get("email"));
         Assertions.assertEquals(1, usuarioModel.getSituacao());
-        Assertions.assertEquals("2022-04-09T15:09:00.000+00:00", data.get("dataHoraSyc"));
+        Assertions.assertEquals("2022-04-09T12:09:00.000+00:00", data.get("datahorasyc"));
     }
 
     @Test
@@ -155,19 +153,7 @@ class UsuarioControllerTest {
         Assertions.assertEquals(2, data.get("id"));
         Assertions.assertEquals(usuarioModel.getEmail(), data.get("email"));
         Assertions.assertEquals(usuarioModel.getSituacao(), data.get("situacao"));
-        Assertions.assertEquals("2022-05-02T12:09:00.000+00:00", data.get("dataHoraSyc"));
-    }
-
-    private void assertionsObjectResponseModel(ObjectResponseModel<String> objectResponseExpected, ObjectResponseModel<String> objectResponseActual) {
-        Assertions.assertEquals(objectResponseExpected.getStatus(), objectResponseActual.getStatus());
-        Assertions.assertNull(objectResponseExpected.getData());
-        Assertions.assertNull(objectResponseExpected.getMessage());
-    }
-
-    private void assertionsUsuario(Usuario usuario, Usuario usuarioActual) {
-        Assertions.assertEquals(usuario.getId(), usuarioActual.getId());
-        Assertions.assertEquals(usuario.getEmail(), usuarioActual.getEmail());
-        Assertions.assertEquals(usuario.getPassword(), usuarioActual.getPassword());
+        Assertions.assertEquals("2022-05-02T12:09:00.000+00:00", data.get("datahorasyc"));
     }
 
 }
