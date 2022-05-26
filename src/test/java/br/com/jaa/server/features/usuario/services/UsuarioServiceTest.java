@@ -1,11 +1,8 @@
 package br.com.jaa.server.features.usuario.services;
 
 import br.com.jaa.server.features.shared.models.ObjectResponseModel;
-import br.com.jaa.server.features.usuario.entities.Usuario;
 import br.com.jaa.server.features.usuario.models.UsuarioModel;
 import br.com.jaa.server.features.usuario.models.UsuarioModelFixture;
-import br.com.jaa.server.fixtures.ObjectResponseFixture;
-import br.com.jaa.server.features.usuario.entities.UsuarioFixture;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

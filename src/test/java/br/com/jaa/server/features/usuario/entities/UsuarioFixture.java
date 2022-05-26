@@ -1,8 +1,5 @@
 package br.com.jaa.server.features.usuario.entities;
 
-import br.com.jaa.server.features.usuario.entities.Usuario;
-import br.com.jaa.server.features.usuario.models.UsuarioModel;
-
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
