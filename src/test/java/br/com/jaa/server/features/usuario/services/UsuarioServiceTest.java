@@ -43,7 +43,17 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void readByIdError() {
+    void readByIdErrorZero() {
+        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.readById("0");
+
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
+        Assertions.assertNotNull(objectResponseActual.getMessage());
+        Assertions.assertEquals("ID INCORRETO", objectResponseActual.getMessage());
+        Assertions.assertNull(objectResponseActual.getData());
+    }
+
+    @Test
+    void readByIdErrorEmpyt() {
         ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.readById("");
 
         Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());

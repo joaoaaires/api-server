@@ -1,5 +1,6 @@
 package br.com.jaa.server.features.usuario.services;
 
+import br.com.jaa.server.core.exceptio.ApiServerException;
 import br.com.jaa.server.core.exceptio.ApiServerRuntimeException;
 import br.com.jaa.server.core.util.Convert;
 import br.com.jaa.server.core.util.ExceptionUtil;
@@ -36,14 +37,16 @@ public class UsuarioService {
     public ObjectResponseModel<UsuarioModel> readById(String id) {
         try {
             Long idLong = Convert.toLong(id);
-            if (idLong == 0) exceptionUtil.getRuntimeException("ID INCORRETO");
+            if (idLong == 0) {
+                throw new ApiServerException("ID INCORRETO");
+            }
             Usuario usuario = usuarioRepository.readById(idLong);
             UsuarioModel usuarioModel = UsuarioModel.fromUsuario(usuario);
             return objectResponseModelUtil.getObjectResponse(
                     HttpStatus.OK,
                     usuarioModel
             );
-        } catch (ApiServerRuntimeException exception) {
+        } catch (ApiServerException exception) {
             return objectResponseModelUtil.getObjectResponse(
                     HttpStatus.BAD_REQUEST,
                     exception.getMessage()

@@ -1,5 +1,6 @@
 package br.com.jaa.server.core.util;
 
+import br.com.jaa.server.core.exceptio.ApiServerException;
 import br.com.jaa.server.core.exceptio.ApiServerRuntimeException;
 import org.springframework.stereotype.Component;
 
