@@ -11,6 +11,7 @@ import br.com.jaa.server.features.usuario.models.UsuarioModel;
 import br.com.jaa.server.features.usuario.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,7 +26,13 @@ public class UsuarioService {
     @Autowired
     private ExceptionUtil exceptionUtil;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public ObjectResponseModel<UsuarioModel> create(UsuarioModel usuarioModel) {
+        String passwordEncode = passwordEncoder.encode(usuarioModel.getPassword());
+        usuarioModel.setPassword(passwordEncode);
+
         Usuario usuario = usuarioRepository.create(usuarioModel);
         usuarioModel = UsuarioModel.fromUsuario(usuario);
         return objectResponseModelUtil.getObjectResponse(
