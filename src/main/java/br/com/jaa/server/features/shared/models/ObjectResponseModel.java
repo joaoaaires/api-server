@@ -1,9 +1,6 @@
 package br.com.jaa.server.features.shared.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import org.springframework.http.HttpStatus;
-
-import java.io.Serializable;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ObjectResponseModel<T> {

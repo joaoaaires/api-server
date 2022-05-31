@@ -1,6 +1,8 @@
 package br.com.jaa.server.features.usuario.controllers;
 
 import br.com.jaa.server.features.shared.models.ObjectResponseModel;
+import br.com.jaa.server.features.usuario.entities.Usuario;
+import br.com.jaa.server.features.usuario.enums.UsuarioServiceMessageEnum;
 import br.com.jaa.server.features.usuario.models.UsuarioModel;
 import br.com.jaa.server.features.usuario.models.UsuarioModelFixture;
 import org.junit.jupiter.api.Assertions;
@@ -17,6 +19,7 @@ import org.springframework.test.context.jdbc.Sql;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Map;
+import java.util.TimeZone;
 
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
@@ -62,14 +65,14 @@ class UsuarioControllerTest {
         Assertions.assertEquals(4, data.size());
         Assertions.assertEquals(6, data.get("id"));
         Assertions.assertEquals(usuarioModel.getEmail(), data.get("email"));
-        Assertions.assertEquals(usuarioModel.getSituacao(), data.get("situacao"));
-        Assertions.assertEquals("2022-04-09T12:09:00.000+00:00", data.get("datahorasyc"));
+        Assertions.assertEquals(1, usuarioModel.getSituacao());
     }
 
     @Test
     void readById() {
+        UsuarioModel usuarioModel = UsuarioModelFixture.getUsuarioModel();
         ResponseEntity<ObjectResponseModel> responseEntity = testRestTemplate.getForEntity(
-                url.concat("/read/" + 1L),
+                url.concat("/read/").concat(String.valueOf(usuarioModel.getId())),
                 ObjectResponseModel.class
         );
 
@@ -82,13 +85,27 @@ class UsuarioControllerTest {
 
         Map<String, Object> data = (Map<String, Object>) objectResponseModel.getData();
 
-        System.out.println(data);
-
         Assertions.assertEquals(4, data.size());
-        Assertions.assertEquals(1, data.get("id"));
-        Assertions.assertEquals("lobortis.augue@aol.edu", data.get("email"));
-        Assertions.assertEquals(0, data.get("situacao"));
-        Assertions.assertEquals("2022-05-18T16:42:01.000+00:00", data.get("datahorasyc"));
+        Assertions.assertEquals(2, data.get("id"));
+        Assertions.assertEquals(usuarioModel.getEmail(), data.get("email"));
+        Assertions.assertEquals(usuarioModel.getSituacao(), data.get("situacao"));
+    }
+
+    @Test
+    void readByIdErrorId() {
+        ResponseEntity<ObjectResponseModel> responseEntity = testRestTemplate.getForEntity(
+                url.concat("/read/ERROR"),
+                ObjectResponseModel.class
+        );
+
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+
+        ObjectResponseModel objectResponseModel = responseEntity.getBody();
+
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseModel.getStatus());
+        Assertions.assertNotNull(objectResponseModel.getMessage());
+        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_ID_NAO_VALIDO.getCode(), objectResponseModel.getMessage());
+        Assertions.assertNull(objectResponseModel.getData());
     }
 
 
@@ -97,7 +114,8 @@ class UsuarioControllerTest {
         UsuarioModel usuarioModel = UsuarioModelFixture.getUsuarioModel();
         usuarioModel.setSituacao(1);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Timestamp dataHoraSyc = new Timestamp(formatter.parse("2022-05-02 12:09:00").getTime());
+        formatter.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
+        Timestamp dataHoraSyc = new Timestamp(formatter.parse("2022-05-02 15:09:00").getTime());
         usuarioModel.setDataHoraSyc(dataHoraSyc);
 
         ResponseEntity<ObjectResponseModel> responseEntity = testRestTemplate.postForEntity(
@@ -119,7 +137,6 @@ class UsuarioControllerTest {
         Assertions.assertEquals(2, data.get("id"));
         Assertions.assertEquals(usuarioModel.getEmail(), data.get("email"));
         Assertions.assertEquals(usuarioModel.getSituacao(), data.get("situacao"));
-        Assertions.assertEquals("2022-05-02T12:09:00.000+00:00", data.get("datahorasyc"));
     }
 
     @Test
@@ -144,7 +161,6 @@ class UsuarioControllerTest {
         Assertions.assertEquals(0, data.get("id"));
         Assertions.assertEquals(usuarioModel.getEmail(), data.get("email"));
         Assertions.assertEquals(usuarioModel.getSituacao(), data.get("situacao"));
-        Assertions.assertEquals("2023-02-12T09:29:35.000+00:00", data.get("datahorasyc"));
     }
 
     @Test
@@ -169,8 +185,7 @@ class UsuarioControllerTest {
         Assertions.assertEquals(4, data.size());
         Assertions.assertEquals(6, data.get("id"));
         Assertions.assertEquals(usuarioModel.getEmail(), data.get("email"));
-        Assertions.assertEquals(usuarioModel.getSituacao(), data.get("situacao"));
-        Assertions.assertEquals("2022-04-09T12:09:00.000+00:00", data.get("datahorasyc"));
+        Assertions.assertEquals(1, usuarioModel.getSituacao());
     }
 
     @Test
@@ -178,7 +193,8 @@ class UsuarioControllerTest {
         UsuarioModel usuarioModel = UsuarioModelFixture.getUsuarioModel();
         usuarioModel.setSituacao(1);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Timestamp dataHoraSyc = new Timestamp(formatter.parse("2022-05-02 12:09:00").getTime());
+        formatter.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
+        Timestamp dataHoraSyc = new Timestamp(formatter.parse("2022-05-02 15:09:00").getTime());
         usuarioModel.setDataHoraSyc(dataHoraSyc);
 
         ResponseEntity<ObjectResponseModel> responseEntity = testRestTemplate.postForEntity(
@@ -200,7 +216,18 @@ class UsuarioControllerTest {
         Assertions.assertEquals(2, data.get("id"));
         Assertions.assertEquals(usuarioModel.getEmail(), data.get("email"));
         Assertions.assertEquals(usuarioModel.getSituacao(), data.get("situacao"));
-        Assertions.assertEquals("2022-05-02T12:09:00.000+00:00", data.get("datahorasyc"));
+    }
+
+    private void assertionsObjectResponseModel(ObjectResponseModel<String> objectResponseExpected, ObjectResponseModel<String> objectResponseActual) {
+        Assertions.assertEquals(objectResponseExpected.getStatus(), objectResponseActual.getStatus());
+        Assertions.assertNull(objectResponseExpected.getData());
+        Assertions.assertNull(objectResponseExpected.getMessage());
+    }
+
+    private void assertionsUsuario(Usuario usuario, Usuario usuarioActual) {
+        Assertions.assertEquals(usuario.getId(), usuarioActual.getId());
+        Assertions.assertEquals(usuario.getEmail(), usuarioActual.getEmail());
+        Assertions.assertEquals(usuario.getPassword(), usuarioActual.getPassword());
     }
 
 }

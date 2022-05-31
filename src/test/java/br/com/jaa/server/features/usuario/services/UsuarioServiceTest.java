@@ -1,6 +1,7 @@
 package br.com.jaa.server.features.usuario.services;
 
 import br.com.jaa.server.features.shared.models.ObjectResponseModel;
+import br.com.jaa.server.features.usuario.enums.UsuarioServiceMessageEnum;
 import br.com.jaa.server.features.usuario.models.UsuarioModel;
 import br.com.jaa.server.features.usuario.models.UsuarioModelFixture;
 import org.junit.jupiter.api.Assertions;
@@ -48,7 +49,7 @@ class UsuarioServiceTest {
 
         Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
         Assertions.assertNotNull(objectResponseActual.getMessage());
-        Assertions.assertEquals("ID INCORRETO", objectResponseActual.getMessage());
+        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_ID_NAO_VALIDO.getCode(), objectResponseActual.getMessage());
         Assertions.assertNull(objectResponseActual.getData());
     }
 
@@ -58,10 +59,29 @@ class UsuarioServiceTest {
 
         Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
         Assertions.assertNotNull(objectResponseActual.getMessage());
-        Assertions.assertEquals("ID INCORRETO", objectResponseActual.getMessage());
+        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_ID_NAO_VALIDO.getCode(), objectResponseActual.getMessage());
         Assertions.assertNull(objectResponseActual.getData());
     }
 
+    @Test
+    void readByIdErrorNull() {
+        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.readById(null);
+
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
+        Assertions.assertNotNull(objectResponseActual.getMessage());
+        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_ID_NAO_VALIDO.getCode(), objectResponseActual.getMessage());
+        Assertions.assertNull(objectResponseActual.getData());
+    }
+
+    @Test
+    void readByIdErrorNegative() {
+        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.readById("-1");
+
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
+        Assertions.assertNotNull(objectResponseActual.getMessage());
+        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_ID_NAO_VALIDO.getCode(), objectResponseActual.getMessage());
+        Assertions.assertNull(objectResponseActual.getData());
+    }
 
     @Test
     void update() throws Exception {
