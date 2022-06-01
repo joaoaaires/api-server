@@ -23,43 +23,40 @@ class UsuarioRepositoryTest {
 
     @Test
     void create() {
-        Usuario usuarioExpected = UsuarioFixture.getUsuarioCreate();
+        Usuario usuario = UsuarioFixture.getUsuarioCreate();
 
-        Usuario  usuario = usuarioRepository.create(usuarioExpected);
+        Usuario usuarioActual = usuarioRepository.create(usuario);
 
-        Assertions.assertNotEquals(0L, usuario.getId());
+        Usuario usuarioExpected = usuarioRepository.readById(usuario.getId());
 
-        Usuario usuarioActual = usuarioRepository.readById(usuario.getId());
-
-        Assertions.assertNotNull(usuarioActual);
+        Assertions.assertNotNull(usuarioExpected);
         assertionsUsuario(usuarioExpected, usuarioActual);
     }
 
     @Test
     void readById() {
-        Usuario usuarioExpected = UsuarioFixture.getUsuario();
-
         Usuario usuarioActual = usuarioRepository.readById(2L);
 
+        Usuario usuarioExpected = UsuarioFixture.getUsuario();
+
+        Assertions.assertNotNull(usuarioActual);
         assertionsUsuario(usuarioExpected, usuarioActual);
     }
 
 
     @Test
     void update() throws Exception {
-        Usuario usuarioExpected = UsuarioFixture.getUsuario();
-        usuarioExpected.setPassword("123321");
+        Usuario usuario = UsuarioFixture.getUsuario();
+        usuario.setPassword("123");
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Timestamp dataHoraAlt = new Timestamp(formatter.parse("2022-05-02 12:09:00").getTime());
-        usuarioExpected.setDataHoraAlt(dataHoraAlt);
+        usuario.setDataHoraAlt(dataHoraAlt);
 
-        Usuario usuario = usuarioRepository.update(usuarioExpected);
+        Usuario usuarioActual = usuarioRepository.update(usuario);
 
-        Assertions.assertNotNull(usuario);
+        Usuario usuarioExpected = usuarioRepository.readById(usuario.getId());
 
-        Usuario usuarioActual = usuarioRepository.readById(usuario.getId());
-
-        Assertions.assertNotNull(usuarioActual);
+        Assertions.assertNotNull(usuarioExpected);
         assertionsUsuario(usuarioExpected, usuarioActual);
     }
 

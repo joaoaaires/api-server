@@ -26,11 +26,19 @@ class UsuarioServiceTest {
 
     @Test
     void create() {
-        UsuarioModel usuarioExpected = UsuarioModelFixture.getUsuarioModelCreate();
+        UsuarioModel usuarioModel = UsuarioModelFixture.getUsuarioModelCreate();
 
-        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.create(usuarioExpected);
+        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.create(usuarioModel);
 
         assertionsObjectResponseModel(objectResponseActual);
+
+        UsuarioModel usuarioActual = objectResponseActual.getData();
+
+        Assertions.assertNotNull(usuarioActual.getId());
+
+        String id = String.valueOf(usuarioActual.getId());
+        ObjectResponseModel<UsuarioModel> objectResponseExpected = usuarioService.readById(id);
+
     }
 
     @Test

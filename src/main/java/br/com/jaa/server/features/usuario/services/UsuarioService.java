@@ -33,6 +33,8 @@ public class UsuarioService {
         String passwordCrypt = passwordEncoder.encode(usuarioModel.getPassword());
         usuarioModel.setPassword(passwordCrypt);
 
+
+
         Usuario usuario = usuarioRepository.create(usuarioModel);
         usuarioModel = UsuarioModel.fromUsuario(usuario);
         return objectResponseModelUtil.getObjectResponse(

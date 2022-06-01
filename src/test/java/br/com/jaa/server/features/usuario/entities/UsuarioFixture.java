@@ -1,5 +1,7 @@
 package br.com.jaa.server.features.usuario.entities;
 
+import org.junit.jupiter.api.Assertions;
+
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
