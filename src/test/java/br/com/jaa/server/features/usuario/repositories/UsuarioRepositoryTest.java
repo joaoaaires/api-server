@@ -1,5 +1,6 @@
 package br.com.jaa.server.features.usuario.repositories;
 
+import br.com.jaa.server.features.usuario.UsuarioAssertions;
 import br.com.jaa.server.features.usuario.entities.Usuario;
 import br.com.jaa.server.features.usuario.entities.UsuarioFixture;
 import org.junit.jupiter.api.Assertions;
@@ -30,7 +31,7 @@ class UsuarioRepositoryTest {
         Usuario usuarioExpected = usuarioRepository.readById(usuario.getId());
 
         Assertions.assertNotNull(usuarioExpected);
-        assertionsUsuario(usuarioExpected, usuarioActual);
+        UsuarioAssertions.assertionsUsuario(usuarioExpected, usuarioActual);
     }
 
     @Test
@@ -40,7 +41,7 @@ class UsuarioRepositoryTest {
         Usuario usuarioExpected = UsuarioFixture.getUsuario();
 
         Assertions.assertNotNull(usuarioActual);
-        assertionsUsuario(usuarioExpected, usuarioActual);
+        UsuarioAssertions.assertionsUsuario(usuarioExpected, usuarioActual);
     }
 
 
@@ -57,49 +58,22 @@ class UsuarioRepositoryTest {
         Usuario usuarioExpected = usuarioRepository.readById(usuario.getId());
 
         Assertions.assertNotNull(usuarioExpected);
-        assertionsUsuario(usuarioExpected, usuarioActual);
+        UsuarioAssertions.assertionsUsuario(usuarioExpected, usuarioActual);
     }
 
     @Test
     void delete() throws Exception {
-        Usuario usuarioExpected = UsuarioFixture.getUsuario();
+        Usuario usuario = UsuarioFixture.getUsuario();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Timestamp dataHoraDel = new Timestamp(formatter.parse("2022-05-02 12:09:00").getTime());
-        usuarioExpected.setDataHoraDel(dataHoraDel);
+        usuario.setDataHoraDel(dataHoraDel);
 
-        Usuario usuario = usuarioRepository.delete(usuarioExpected);
+        Usuario usuarioActual = usuarioRepository.delete(usuario);
 
-        Assertions.assertEquals(0L, usuario.getId());
+        Usuario usuarioExpected = usuarioRepository.readById(usuario.getId());
 
-        Usuario usuarioActual = usuarioRepository.readById(usuario.getId());
-
-        Assertions.assertNull(usuarioActual);
-    }
-
-    private void assertionsUsuario(Usuario usuarioExpected, Usuario usuarioActual) {
-        Assertions.assertNotNull(usuarioActual.getId());
-        Assertions.assertEquals(usuarioExpected.getId(), usuarioActual.getId());
-
-        Assertions.assertNotNull(usuarioActual.getEmail());
-        Assertions.assertEquals(usuarioExpected.getEmail(), usuarioActual.getEmail());
-
-        Assertions.assertNotNull(usuarioActual.getPassword());
-        Assertions.assertEquals(usuarioExpected.getPassword(), usuarioActual.getPassword());
-
-        Assertions.assertNotNull(usuarioActual.getSituacao());
-        Assertions.assertEquals(usuarioExpected.getSituacao(), usuarioActual.getSituacao());
-
-        Assertions.assertNotNull(usuarioActual.getDataHoraSyc());
-        Assertions.assertEquals(usuarioExpected.getDataHoraSyc(), usuarioActual.getDataHoraSyc());
-
-        Assertions.assertNotNull(usuarioActual.getDataHoraInc());
-        Assertions.assertEquals(usuarioExpected.getDataHoraInc(), usuarioActual.getDataHoraInc());
-
-        Assertions.assertNotNull(usuarioActual.getDataHoraAlt());
-        Assertions.assertEquals(usuarioExpected.getDataHoraAlt(), usuarioActual.getDataHoraAlt());
-
-        Assertions.assertNotNull(usuarioActual.getDataHoraDel());
-        Assertions.assertEquals(usuarioExpected.getDataHoraDel(), usuarioActual.getDataHoraDel());
+        Assertions.assertEquals(0L, usuarioActual.getId());
+        Assertions.assertNull(usuarioExpected);
     }
 
 }

@@ -1,6 +1,7 @@
 package br.com.jaa.server.features.usuario.services;
 
 import br.com.jaa.server.features.shared.models.ObjectResponseModel;
+import br.com.jaa.server.features.usuario.UsuarioAssertions;
 import br.com.jaa.server.features.usuario.enums.UsuarioServiceMessageEnum;
 import br.com.jaa.server.features.usuario.models.UsuarioModel;
 import br.com.jaa.server.features.usuario.models.UsuarioModelFixture;
@@ -26,19 +27,23 @@ class UsuarioServiceTest {
 
     @Test
     void create() {
-        UsuarioModel usuarioModel = UsuarioModelFixture.getUsuarioModelCreate();
-
-        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.create(usuarioModel);
+        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.create(
+                UsuarioModelFixture.getUsuarioModelCreate()
+        );
 
         assertionsObjectResponseModel(objectResponseActual);
 
-        UsuarioModel usuarioActual = objectResponseActual.getData();
+        UsuarioModel usuarioModelActual = objectResponseActual.getData();
 
-        Assertions.assertNotNull(usuarioActual.getId());
+        ObjectResponseModel<UsuarioModel> objectResponseExpected = usuarioService.readById(
+                String.valueOf(usuarioModelActual.getId())
+        );
 
-        String id = String.valueOf(usuarioActual.getId());
-        ObjectResponseModel<UsuarioModel> objectResponseExpected = usuarioService.readById(id);
+        assertionsObjectResponseModel(objectResponseExpected);
 
+        UsuarioModel usuarioModelExpected = objectResponseExpected.getData();
+
+        UsuarioAssertions.assertionsUsuarioModel(usuarioModelExpected, usuarioModelActual);
     }
 
     @Test
