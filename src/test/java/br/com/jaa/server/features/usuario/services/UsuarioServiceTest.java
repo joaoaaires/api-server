@@ -47,6 +47,18 @@ class UsuarioServiceTest {
     }
 
     @Test
+    void createErrorEmailDuplicado() {
+        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.create(
+                UsuarioModelFixture.getUsuarioModel()
+        );
+
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
+        Assertions.assertNull(objectResponseActual.getData());
+        Assertions.assertNotNull(objectResponseActual.getMessage());
+        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_CADASTRADO.getCode(), objectResponseActual.getMessage());
+    }
+
+    @Test
     void readByIdOk() {
        UsuarioModel usuarioExpected = UsuarioModelFixture.getUsuarioModel();
 

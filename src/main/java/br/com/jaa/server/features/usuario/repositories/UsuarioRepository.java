@@ -30,8 +30,7 @@ public class UsuarioRepository extends DefaultRepository {
             "u.datahorainc,\n" +
             "u.datahoraalt,\n" +
             "u.datahoradel\n" +
-            "FROM usuario u\n" +
-            "WHERE u.id = :ID;";
+            "FROM usuario u\n";
 
     private static final String QUERY_UPDATE = "UPDATE usuario SET\n" +
             "email = :EMAIL,\n" +
@@ -56,8 +55,16 @@ public class UsuarioRepository extends DefaultRepository {
     }
 
     public Usuario readById(Long id) {
+        String sql = QUERY_READ.concat("WHERE u.id = :ID;");
         MapSqlParameterSource params = new MapSqlParameterSource().addValue("ID", id);
-        List<Usuario> list = this.defaultNamedParameterJdbcTemplate.query(QUERY_READ, params, rowMapper);
+        List<Usuario> list = this.defaultNamedParameterJdbcTemplate.query(sql, params, rowMapper);
+        return !list.isEmpty() ? list.get(0) : null;
+    }
+
+    public Usuario readByEmail(String email) {
+        String sql = QUERY_READ.concat("WHERE u.email = :EMAIL;");
+        MapSqlParameterSource params = new MapSqlParameterSource().addValue("EMAIL", email);
+        List<Usuario> list = this.defaultNamedParameterJdbcTemplate.query(sql, params, rowMapper);
         return !list.isEmpty() ? list.get(0) : null;
     }
 

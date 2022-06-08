@@ -1,5 +1,6 @@
 package br.com.jaa.server.features.usuario.controllers;
 
+import br.com.jaa.server.core.security.TestSecurityConfig;
 import br.com.jaa.server.features.shared.models.ObjectResponseModel;
 import br.com.jaa.server.features.usuario.entities.Usuario;
 import br.com.jaa.server.features.usuario.enums.UsuarioServiceMessageEnum;
@@ -22,7 +23,8 @@ import java.util.Map;
 import java.util.TimeZone;
 
 @SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        classes = TestSecurityConfig.class
 )
 @Sql(
         value = {"/scripts/usuario_script.sql"},

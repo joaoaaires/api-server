@@ -45,6 +45,30 @@ class UsuarioRepositoryTest {
         UsuarioAssertions.assertionsUsuario(usuarioExpected, usuarioActual);
     }
 
+    @Test
+    void readByIdNotFound() {
+        Usuario usuarioActual = usuarioRepository.readById(0L);
+
+        Assertions.assertNull(usuarioActual);
+    }
+
+    @Test
+    void readByEmail() {
+        Usuario usuarioActual = usuarioRepository.readByEmail("pede.malesuada@aol.ca");
+
+        Usuario usuarioExpected = UsuarioFixture.getUsuario();
+
+        Assertions.assertNotNull(usuarioActual);
+        UsuarioAssertions.assertionsUsuario(usuarioExpected, usuarioActual);
+    }
+
+    @Test
+    void readByEmaildNotFound() {
+        Usuario usuarioActual = usuarioRepository.readByEmail("pedro@sovis.com.br");
+
+        Assertions.assertNull(usuarioActual);
+    }
+
 
     @Test
     void update() throws Exception {

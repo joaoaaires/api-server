@@ -5,7 +5,7 @@ spring:
     property-naming-strategy: LOWER_CASE
   datasource:
     url: jdbc:mysql://localhost:3306/api?useSSL=false&zeroDateTimeBehavior=convertToNull&autoReconnect=true&tinyInt1isBit=false
-    username: server
+    username: root
     password: 123321
     driverClassName: org.mariadb.jdbc.Driver
 

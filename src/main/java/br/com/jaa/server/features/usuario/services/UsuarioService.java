@@ -11,7 +11,6 @@ import br.com.jaa.server.features.usuario.models.UsuarioModel;
 import br.com.jaa.server.features.usuario.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,15 +29,27 @@ public class UsuarioService {
     private ExceptionUtil exceptionUtil;
 
     public ObjectResponseModel<UsuarioModel> create(UsuarioModel usuarioModel) {
+        try {
+            Usuario usuarioValidation = usuarioRepository.readByEmail(usuarioModel.getEmail());
+            if (usuarioValidation != null) {
+                throw new ApiServerException(UsuarioServiceMessageEnum.USUARIO_CADASTRADO.getCode());
+            }
+
 //        String passwordCrypt = passwordEncoder.encode(usuarioModel.getPassword());
 //        usuarioModel.setPassword(passwordCrypt);
 
-        Usuario usuario = usuarioRepository.create(usuarioModel);
-        usuarioModel = UsuarioModel.fromUsuario(usuario);
-        return objectResponseModelUtil.getObjectResponse(
-                HttpStatus.OK,
-                usuarioModel
-        );
+            Usuario usuario = usuarioRepository.create(usuarioModel);
+            usuarioModel = UsuarioModel.fromUsuario(usuario);
+            return objectResponseModelUtil.getObjectResponse(
+                    HttpStatus.OK,
+                    usuarioModel
+            );
+        } catch (ApiServerException exception) {
+            return objectResponseModelUtil.getObjectResponse(
+                    HttpStatus.BAD_REQUEST,
+                    exception.getMessage()
+            );
+        }
     }
 
     public ObjectResponseModel<UsuarioModel> readById(String id) {
