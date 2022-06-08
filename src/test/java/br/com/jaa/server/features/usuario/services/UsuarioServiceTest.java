@@ -67,7 +67,7 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void readByIdErrorEmpyt() {
+    void readByIdErrorEmpty() {
         ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.readById("");
 
         Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
@@ -83,6 +83,16 @@ class UsuarioServiceTest {
         Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
         Assertions.assertNotNull(objectResponseActual.getMessage());
         Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_ID_NAO_VALIDO.getCode(), objectResponseActual.getMessage());
+        Assertions.assertNull(objectResponseActual.getData());
+    }
+
+    @Test
+    void readByIdErrorNotFound() {
+        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.readById("6516516515");
+
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
+        Assertions.assertNotNull(objectResponseActual.getMessage());
+        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_NAO_ENCONTRADO.getCode(), objectResponseActual.getMessage());
         Assertions.assertNull(objectResponseActual.getData());
     }
 

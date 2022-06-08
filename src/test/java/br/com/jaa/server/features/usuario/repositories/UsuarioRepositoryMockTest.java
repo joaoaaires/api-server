@@ -2,6 +2,7 @@ package br.com.jaa.server.features.usuario.repositories;
 
 import br.com.jaa.server.features.usuario.entities.Usuario;
 import br.com.jaa.server.features.usuario.entities.UsuarioFixture;
+import br.com.jaa.server.features.usuario.repositories.UsuarioRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
