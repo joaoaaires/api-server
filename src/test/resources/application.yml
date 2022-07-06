@@ -4,10 +4,18 @@ spring:
   jackson:
     property-naming-strategy: LOWER_CASE
   datasource:
-    #    url: jdbc:h2:./data
-    username: sa
-    password:
-    driverClassName: org.h2.Driver
+    url: jdbc:mysql://localhost:3306/api_test?useSSL=false&zeroDateTimeBehavior=convertToNull&autoReconnect=true&tinyInt1isBit=false
+    username: root
+    password: 123321
+    driverClassName: org.mariadb.jdbc.Driver
+
+logging:
+  level:
+    org:
+      springframework:
+        jdbc:
+          core:
+            JdbcTemplate: debug
 
 server:
   port: 8081

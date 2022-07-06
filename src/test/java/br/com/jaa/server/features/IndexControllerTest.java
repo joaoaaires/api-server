@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = TestSecurityConfig.class
 )
-public class IndexControllerText {
+public class IndexControllerTest {
 
     @LocalServerPort
     private int port;

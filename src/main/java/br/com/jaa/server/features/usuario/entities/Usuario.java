@@ -1,15 +1,25 @@
 package br.com.jaa.server.features.usuario.entities;
 
 import br.com.jaa.server.features.shared.entities.Audit;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.sql.Timestamp;
 
+@Table("usuario")
 public class Usuario extends Audit {
 
+    @Id
+    @Column("id")
     private Long id;
+    @Column("email")
     private String email;
+    @Column("password")
     private String password;
+    @Column("situacao")
     private Integer situacao;
+    @Column("datahorasyc")
     private Timestamp dataHoraSyc;
 
     public Long getId() {

@@ -8,10 +8,14 @@ import br.com.jaa.server.features.shared.utils.ObjectResponseModelUtil;
 import br.com.jaa.server.features.usuario.entities.Usuario;
 import br.com.jaa.server.features.usuario.enums.UsuarioServiceMessageEnum;
 import br.com.jaa.server.features.usuario.models.UsuarioModel;
+import br.com.jaa.server.features.usuario.repositories.UsuarioCrudRepository;
 import br.com.jaa.server.features.usuario.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UsuarioService {
@@ -20,25 +24,30 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
+    private UsuarioCrudRepository usuarioCrudRepository;
+
+    @Autowired
     private ObjectResponseModelUtil objectResponseModelUtil;
 
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private ExceptionUtil exceptionUtil;
 
     public ObjectResponseModel<UsuarioModel> create(UsuarioModel usuarioModel) {
         try {
-            Usuario usuarioValidation = usuarioRepository.readByEmail(usuarioModel.getEmail());
-            if (usuarioValidation != null) {
+            boolean existsByEmail = usuarioCrudRepository.existsByEmail(usuarioModel.getEmail());
+            if (existsByEmail) {
                 throw new ApiServerException(UsuarioServiceMessageEnum.USUARIO_CADASTRADO.getCode());
             }
 
-//        String passwordCrypt = passwordEncoder.encode(usuarioModel.getPassword());
-//        usuarioModel.setPassword(passwordCrypt);
+            String passwordCrypt = passwordEncoder.encode(usuarioModel.getPassword());
+            usuarioModel.setPassword(passwordCrypt);
 
-            Usuario usuario = usuarioRepository.create(usuarioModel);
+            if (usuarioModel.getId() != null && usuarioModel.getId() == 0) usuarioModel.setId(null);
+
+            Usuario usuario = usuarioCrudRepository.save((Usuario) usuarioModel);
             usuarioModel = UsuarioModel.fromUsuario(usuario);
             return objectResponseModelUtil.getObjectResponse(
                     HttpStatus.OK,
