@@ -7,9 +7,9 @@ import java.text.SimpleDateFormat;
 
 public class UsuarioFixture {
 
-    public static Usuario getUsuarioCreate() {
+    public static Usuario getUsuarioNew() {
         Usuario usuario = new Usuario();
-        usuario.setId(0L);
+        usuario.setId(null);
         usuario.setEmail("joao.aires@gmail.com");
         usuario.setPassword("123");
         usuario.setSituacao(0);
@@ -35,7 +35,7 @@ public class UsuarioFixture {
         return usuario;
     }
 
-    public static Usuario getUsuario() {
+    public static Usuario getUsuarioOld() {
         Usuario usuario = new Usuario();
         usuario.setId(2L);
         usuario.setEmail("pede.malesuada@aol.ca");

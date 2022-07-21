@@ -34,7 +34,6 @@ public class UsuarioAssertions {
 
     public static void assertionsUsuarioModel(UsuarioModel usuarioExpected, UsuarioModel usuarioActual) {
         Assertions.assertNotNull(usuarioActual.getId());
-        Assertions.assertEquals(usuarioExpected.getId(), usuarioActual.getId());
 
         Assertions.assertNotNull(usuarioActual.getEmail());
         Assertions.assertEquals(usuarioExpected.getEmail(), usuarioActual.getEmail());

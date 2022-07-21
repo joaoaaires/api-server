@@ -47,7 +47,7 @@ class UsuarioControllerTest {
 
     @Test
     void create() {
-        UsuarioModel usuarioModel = UsuarioModelFixture.getUsuarioModelCreate();
+        UsuarioModel usuarioModel = UsuarioModelFixture.getUsuarioModelNew();
 
         ResponseEntity<ObjectResponseModel> responseEntity = testRestTemplate.postForEntity(
                 url.concat("/create"),
@@ -72,7 +72,7 @@ class UsuarioControllerTest {
 
     @Test
     void readById() {
-        UsuarioModel usuarioModel = UsuarioModelFixture.getUsuarioModel();
+        UsuarioModel usuarioModel = UsuarioModelFixture.getUsuarioModelOld();
         ResponseEntity<ObjectResponseModel> responseEntity = testRestTemplate.getForEntity(
                 url.concat("/read/").concat(String.valueOf(usuarioModel.getId())),
                 ObjectResponseModel.class
@@ -113,7 +113,7 @@ class UsuarioControllerTest {
 
     @Test
     void update() throws Exception {
-        UsuarioModel usuarioModel = UsuarioModelFixture.getUsuarioModel();
+        UsuarioModel usuarioModel = UsuarioModelFixture.getUsuarioModelOld();
         usuarioModel.setSituacao(1);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         formatter.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
@@ -143,7 +143,7 @@ class UsuarioControllerTest {
 
     @Test
     void delete() throws Exception {
-        UsuarioModel usuarioModel = UsuarioModelFixture.getUsuarioModel();
+        UsuarioModel usuarioModel = UsuarioModelFixture.getUsuarioModelOld();
         ResponseEntity<ObjectResponseModel> responseEntity = testRestTemplate.postForEntity(
                 url.concat("/delete"),
                 usuarioModel,
@@ -158,16 +158,11 @@ class UsuarioControllerTest {
         Assertions.assertNotNull(objectResponseModel.getData());
 
         Map<String, Object> data = (Map<String, Object>) objectResponseModel.getData();
-
-        Assertions.assertEquals(4, data.size());
-        Assertions.assertEquals(0, data.get("id"));
-        Assertions.assertEquals(usuarioModel.getEmail(), data.get("email"));
-        Assertions.assertEquals(usuarioModel.getSituacao(), data.get("situacao"));
     }
 
     @Test
     void saveCreate() {
-        UsuarioModel usuarioModel = UsuarioModelFixture.getUsuarioModelCreate();
+        UsuarioModel usuarioModel = UsuarioModelFixture.getUsuarioModelNew();
 
         ResponseEntity<ObjectResponseModel> responseEntity = testRestTemplate.postForEntity(
                 url,
@@ -192,7 +187,7 @@ class UsuarioControllerTest {
 
     @Test
     void saveUpdate() throws Exception {
-        UsuarioModel usuarioModel = UsuarioModelFixture.getUsuarioModel();
+        UsuarioModel usuarioModel = UsuarioModelFixture.getUsuarioModelOld();
         usuarioModel.setSituacao(1);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         formatter.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));

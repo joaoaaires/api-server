@@ -32,7 +32,7 @@ class UsuarioModelTest {
 
     @Test
     void fromUsuario() throws Exception {
-        Usuario usuarioExpected = UsuarioFixture.getUsuario();
+        Usuario usuarioExpected = UsuarioFixture.getUsuarioOld();
         UsuarioModel usuarioActual = UsuarioModel.fromUsuario(usuarioExpected);
 
         Assertions.assertNotNull(usuarioActual.getId());

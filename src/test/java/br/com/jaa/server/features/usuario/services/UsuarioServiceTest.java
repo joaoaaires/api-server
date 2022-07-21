@@ -27,30 +27,22 @@ class UsuarioServiceTest {
 
     @Test
     void create() {
-        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.create(
-                UsuarioModelFixture.getUsuarioModelCreate()
-        );
+        UsuarioModel usuarioModelExpected = UsuarioModelFixture.getUsuarioModelNew();
+
+        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.create(usuarioModelExpected);
 
         assertionsObjectResponseModel(objectResponseActual);
 
         UsuarioModel usuarioModelActual = objectResponseActual.getData();
-
-        ObjectResponseModel<UsuarioModel> objectResponseExpected = usuarioService.readById(
-                String.valueOf(usuarioModelActual.getId())
-        );
-
-        assertionsObjectResponseModel(objectResponseExpected);
-
-        UsuarioModel usuarioModelExpected = objectResponseExpected.getData();
 
         UsuarioAssertions.assertionsUsuarioModel(usuarioModelExpected, usuarioModelActual);
     }
 
     @Test
     void createErrorEmailDuplicado() {
-        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.create(
-                UsuarioModelFixture.getUsuarioModel()
-        );
+        UsuarioModel usuarioModelExpected = UsuarioModelFixture.getUsuarioModelOld();
+
+        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.create(usuarioModelExpected);
 
         Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
         Assertions.assertNull(objectResponseActual.getData());
@@ -59,17 +51,18 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void readByIdOk() {
-       UsuarioModel usuarioExpected = UsuarioModelFixture.getUsuarioModel();
+    void readById() {
+        UsuarioModel usuarioExpected = UsuarioModelFixture.getUsuarioModelOld();
 
-        String id = String.valueOf(usuarioExpected.getId());
-        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.readById(id);
+        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.readById(
+                String.valueOf(usuarioExpected.getId())
+        );
 
         assertionsObjectResponseModel(objectResponseActual);
     }
 
     @Test
-    void readByIdErrorZero() {
+    void readByIdZeroNotFound() {
         ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.readById("0");
 
         Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
@@ -79,7 +72,7 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void readByIdErrorEmpty() {
+    void readByIdEmptyNotFound() {
         ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.readById("");
 
         Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
@@ -89,7 +82,7 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void readByIdErrorNull() {
+    void readByIdNullNotFound() {
         ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.readById(null);
 
         Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
@@ -99,7 +92,7 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void readByIdErrorNotFound() {
+    void readByIdNotFound() {
         ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.readById("6516516515");
 
         Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
@@ -120,7 +113,7 @@ class UsuarioServiceTest {
 
     @Test
     void update() throws Exception {
-        UsuarioModel usuarioExpected = UsuarioModelFixture.getUsuarioModel();
+        UsuarioModel usuarioExpected = UsuarioModelFixture.getUsuarioModelOld();
         usuarioExpected.setPassword("123321");
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Timestamp dataHoraAlt = new Timestamp(formatter.parse("2022-05-02 12:09:00").getTime());
@@ -133,7 +126,7 @@ class UsuarioServiceTest {
 
     @Test
     void delete() throws Exception {
-        UsuarioModel usuarioExpected = UsuarioModelFixture.getUsuarioModel();
+        UsuarioModel usuarioExpected = UsuarioModelFixture.getUsuarioModelOld();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Timestamp dataHoraAlt = new Timestamp(formatter.parse("2022-05-02 12:09:00").getTime());
         usuarioExpected.setDataHoraDel(dataHoraAlt);
@@ -145,7 +138,7 @@ class UsuarioServiceTest {
 
     @Test
     void saveCreateZero() {
-        UsuarioModel usuarioExpected = UsuarioModelFixture.getUsuarioModelCreate();
+        UsuarioModel usuarioExpected = UsuarioModelFixture.getUsuarioModelNew();
         usuarioExpected.setId(0L);
 
         ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.save(usuarioExpected);
@@ -155,7 +148,7 @@ class UsuarioServiceTest {
 
     @Test
     void saveCreateNull() {
-        UsuarioModel usuarioExpected = UsuarioModelFixture.getUsuarioModelCreate();
+        UsuarioModel usuarioExpected = UsuarioModelFixture.getUsuarioModelNew();
         usuarioExpected.setId(null);
 
         ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.save(usuarioExpected);
@@ -165,7 +158,7 @@ class UsuarioServiceTest {
 
     @Test
     void saveUpdate() {
-        UsuarioModel usuarioExpected = UsuarioModelFixture.getUsuarioModel();
+        UsuarioModel usuarioExpected = UsuarioModelFixture.getUsuarioModelOld();
 
         ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.save(usuarioExpected);
 

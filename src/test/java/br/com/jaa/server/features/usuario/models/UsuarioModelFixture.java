@@ -1,13 +1,11 @@
 package br.com.jaa.server.features.usuario.models;
 
-import br.com.jaa.server.features.usuario.models.UsuarioModel;
-
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
 public class UsuarioModelFixture {
 
-    public static UsuarioModel getUsuarioModelCreate() {
+    public static UsuarioModel getUsuarioModelNew() {
         UsuarioModel usuario = new UsuarioModel();
         usuario.setId(0L);
         usuario.setEmail("joao.aires@gmail.com");
@@ -26,7 +24,7 @@ public class UsuarioModelFixture {
         return usuario;
     }
 
-    public static UsuarioModel getUsuarioModel() {
+    public static UsuarioModel getUsuarioModelOld() {
         UsuarioModel usuario = new UsuarioModel();
         usuario.setId(2L);
         usuario.setEmail("pede.malesuada@aol.ca");

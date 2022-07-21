@@ -9,7 +9,6 @@ import br.com.jaa.server.features.usuario.entities.Usuario;
 import br.com.jaa.server.features.usuario.enums.UsuarioServiceMessageEnum;
 import br.com.jaa.server.features.usuario.models.UsuarioModel;
 import br.com.jaa.server.features.usuario.repositories.UsuarioCrudRepository;
-import br.com.jaa.server.features.usuario.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,9 +18,6 @@ import java.util.Optional;
 
 @Service
 public class UsuarioService {
-
-    @Autowired
-    private UsuarioRepository usuarioRepository;
 
     @Autowired
     private UsuarioCrudRepository usuarioCrudRepository;
@@ -69,13 +65,13 @@ public class UsuarioService {
                 throw new ApiServerException(UsuarioServiceMessageEnum.USUARIO_ID_NAO_VALIDO.getCode());
             }
 
-            Usuario usuario = usuarioRepository.readById(idLong);
+            Optional<Usuario> optionalUsuario = usuarioCrudRepository.findById(idLong);
 
-            if (usuario == null) {
+            if (optionalUsuario.isEmpty()) {
                 throw new ApiServerException(UsuarioServiceMessageEnum.USUARIO_NAO_ENCONTRADO.getCode());
             }
 
-            UsuarioModel usuarioModel = UsuarioModel.fromUsuario(usuario);
+            UsuarioModel usuarioModel = UsuarioModel.fromUsuario(optionalUsuario.get());
             return objectResponseModelUtil.getObjectResponse(
                     HttpStatus.OK,
                     usuarioModel
@@ -89,7 +85,7 @@ public class UsuarioService {
     }
 
     public ObjectResponseModel<UsuarioModel> update(UsuarioModel usuarioModel) {
-        Usuario usuario = usuarioRepository.update(usuarioModel);
+        Usuario usuario = usuarioCrudRepository.save((Usuario) usuarioModel);
         usuarioModel = UsuarioModel.fromUsuario(usuario);
         return objectResponseModelUtil.getObjectResponse(
                 HttpStatus.OK,
@@ -98,8 +94,7 @@ public class UsuarioService {
     }
 
     public ObjectResponseModel<UsuarioModel> delete(UsuarioModel usuarioModel) {
-        Usuario usuario = usuarioRepository.delete(usuarioModel);
-        usuarioModel = UsuarioModel.fromUsuario(usuario);
+        usuarioCrudRepository.delete(usuarioModel);
         return objectResponseModelUtil.getObjectResponse(
                 HttpStatus.OK,
                 usuarioModel
