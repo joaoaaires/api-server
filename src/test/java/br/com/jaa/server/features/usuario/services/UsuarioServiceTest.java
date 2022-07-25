@@ -125,6 +125,23 @@ class UsuarioServiceTest {
     }
 
     @Test
+    void updateIdError() throws Exception {
+        UsuarioModel usuarioExpected = UsuarioModelFixture.getUsuarioModelOld();
+        usuarioExpected.setId(-1L);
+        usuarioExpected.setPassword("123321");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Timestamp dataHoraAlt = new Timestamp(formatter.parse("2022-05-02 12:09:00").getTime());
+        usuarioExpected.setDataHoraAlt(dataHoraAlt);
+
+        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.update(usuarioExpected);
+
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
+        Assertions.assertNotNull(objectResponseActual.getMessage());
+        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_NAO_ENCONTRADO.getCode(), objectResponseActual.getMessage());
+        Assertions.assertNull(objectResponseActual.getData());
+    }
+
+    @Test
     void delete() throws Exception {
         UsuarioModel usuarioExpected = UsuarioModelFixture.getUsuarioModelOld();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

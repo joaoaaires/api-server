@@ -38,10 +38,10 @@ public class UsuarioService {
                 throw new ApiServerException(UsuarioServiceMessageEnum.USUARIO_CADASTRADO.getCode());
             }
 
+            usuarioModel.setId(null);
+
             String passwordCrypt = passwordEncoder.encode(usuarioModel.getPassword());
             usuarioModel.setPassword(passwordCrypt);
-
-            if (usuarioModel.getId() != null && usuarioModel.getId() == 0) usuarioModel.setId(null);
 
             Usuario usuario = usuarioCrudRepository.save((Usuario) usuarioModel);
             usuarioModel = UsuarioModel.fromUsuario(usuario);
@@ -85,12 +85,27 @@ public class UsuarioService {
     }
 
     public ObjectResponseModel<UsuarioModel> update(UsuarioModel usuarioModel) {
-        Usuario usuario = usuarioCrudRepository.save((Usuario) usuarioModel);
-        usuarioModel = UsuarioModel.fromUsuario(usuario);
-        return objectResponseModelUtil.getObjectResponse(
-                HttpStatus.OK,
-                usuarioModel
-        );
+        try {
+            boolean existsById = usuarioCrudRepository.existsById(usuarioModel.getId());
+            if (!existsById) {
+                throw new ApiServerException(UsuarioServiceMessageEnum.USUARIO_NAO_ENCONTRADO.getCode());
+            }
+
+            String passwordCrypt = passwordEncoder.encode(usuarioModel.getPassword());
+            usuarioModel.setPassword(passwordCrypt);
+
+            Usuario usuario = usuarioCrudRepository.save((Usuario) usuarioModel);
+            usuarioModel = UsuarioModel.fromUsuario(usuario);
+            return objectResponseModelUtil.getObjectResponse(
+                    HttpStatus.OK,
+                    usuarioModel
+            );
+        } catch (ApiServerException exception) {
+            return objectResponseModelUtil.getObjectResponse(
+                    HttpStatus.BAD_REQUEST,
+                    exception.getMessage()
+            );
+        }
     }
 
     public ObjectResponseModel<UsuarioModel> delete(UsuarioModel usuarioModel) {
