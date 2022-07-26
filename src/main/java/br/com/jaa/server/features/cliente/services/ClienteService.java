@@ -25,4 +25,36 @@ public class ClienteService {
         );
     }
 
+    public ObjectResponseModel<ClienteModel> readById(String id) {
+
+        return objectResponseModelUtil.getObjectResponse(
+                HttpStatus.BAD_REQUEST,
+                null
+        );
+    }
+
+    public ObjectResponseModel<ClienteModel> update(ClienteModel clienteModel) {
+
+        return objectResponseModelUtil.getObjectResponse(
+                HttpStatus.BAD_REQUEST,
+                null
+        );
+    }
+
+    public ObjectResponseModel<ClienteModel> delete(ClienteModel clienteModel) {
+
+        return objectResponseModelUtil.getObjectResponse(
+                HttpStatus.BAD_REQUEST,
+                null
+        );
+    }
+
+    public ObjectResponseModel<ClienteModel> save(ClienteModel clienteModel) {
+
+        return objectResponseModelUtil.getObjectResponse(
+                HttpStatus.BAD_REQUEST,
+                null
+        );
+    }
+
 }

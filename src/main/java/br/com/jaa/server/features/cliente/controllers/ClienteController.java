@@ -19,39 +19,39 @@ public class ClienteController {
     public ResponseEntity<ObjectResponseModel<ClienteModel>> create(
             @RequestBody ClienteModel clienteModel
     ) {
-        ObjectResponseModel<UsuarioModel> responseModel = usuarioService.create(clienteModel);
+        ObjectResponseModel<ClienteModel> responseModel = clienteService.create(clienteModel);
         return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
     }
 
     @GetMapping(value = "/read/{id}")
-    public ResponseEntity<ObjectResponseModel<UsuarioModel>> readById(
+    public ResponseEntity<ObjectResponseModel<ClienteModel>> readById(
             @PathVariable("id") String id
     ) {
-        ObjectResponseModel<UsuarioModel> responseModel = usuarioService.readById(id);
+        ObjectResponseModel<ClienteModel> responseModel = clienteService.readById(id);
         return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
     }
 
     @PostMapping(value = "/update")
-    public ResponseEntity<ObjectResponseModel<UsuarioModel>> update(
-            @RequestBody UsuarioModel usuarioModel
+    public ResponseEntity<ObjectResponseModel<ClienteModel>> update(
+            @RequestBody ClienteModel clienteModel
     ) {
-        ObjectResponseModel<UsuarioModel> responseModel = usuarioService.update(usuarioModel);
+        ObjectResponseModel<ClienteModel> responseModel = clienteService.update(clienteModel);
         return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
     }
 
     @PostMapping(value = "/delete")
-    public ResponseEntity<ObjectResponseModel<UsuarioModel>> delete(
-            @RequestBody UsuarioModel usuarioModel
+    public ResponseEntity<ObjectResponseModel<ClienteModel>> delete(
+            @RequestBody ClienteModel clienteModel
     ) {
-        ObjectResponseModel<UsuarioModel> responseModel = usuarioService.delete(usuarioModel);
+        ObjectResponseModel<ClienteModel> responseModel = clienteService.delete(clienteModel);
         return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
     }
 
     @PostMapping(value = "")
-    public ResponseEntity<ObjectResponseModel<UsuarioModel>> save(
-            @RequestBody UsuarioModel usuarioModel
+    public ResponseEntity<ObjectResponseModel<ClienteModel>> save(
+            @RequestBody ClienteModel clienteModel
     ) {
-        ObjectResponseModel<UsuarioModel> responseModel = usuarioService.save(usuarioModel);
+        ObjectResponseModel<ClienteModel> responseModel = clienteService.save(clienteModel);
         return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
     }
 
