@@ -28,9 +28,6 @@ public class UsuarioService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private ExceptionUtil exceptionUtil;
-
     public ObjectResponseModel<UsuarioModel> create(UsuarioModel usuarioModel) {
         try {
             boolean existsByEmail = usuarioCrudRepository.existsByEmail(usuarioModel.getEmail());
