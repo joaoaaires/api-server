@@ -17,6 +17,10 @@ public class Cliente extends Audit {
     private String nomeUm;
     @Column("nomedois")
     private String nomeDois;
+    @Column("registrounico")
+    private String registroUnico;
+    @Column("registrogeral")
+    private String registroGeral;
     @Column("dataorigem")
     private Date dataOrigem;
     @Column("site")
@@ -48,6 +52,22 @@ public class Cliente extends Audit {
 
     public void setNomeDois(String nomeDois) {
         this.nomeDois = nomeDois;
+    }
+
+    public String getRegistroUnico() {
+        return registroUnico;
+    }
+
+    public void setRegistroUnico(String registroUnico) {
+        this.registroUnico = registroUnico;
+    }
+
+    public String getRegistroGeral() {
+        return registroGeral;
+    }
+
+    public void setRegistroGeral(String registroGeral) {
+        this.registroGeral = registroGeral;
     }
 
     public Date getDataOrigem() {

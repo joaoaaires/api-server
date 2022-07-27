@@ -1,14 +1,15 @@
-package br.com.jaa.server.features.cliente.entities;
+package br.com.jaa.server.features.cliente.models;
+
+import br.com.jaa.server.features.cliente.entities.Cliente;
 
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
-public class ClienteFixture {
+public class ClienteModelFixture {
 
-    public static Cliente getClienteNew() {
-
-        Cliente cliente = new Cliente();
+    public static ClienteModel getClienteModelNew() {
+        ClienteModel cliente = new ClienteModel();
         cliente.setId(null);
         cliente.setNomeUm("João Antonio");
         cliente.setNomeDois("Aires");
@@ -45,8 +46,8 @@ public class ClienteFixture {
         return cliente;
     }
 
-    public static Cliente getClienteOld() {
-        Cliente cliente = new Cliente();
+    public static ClienteModel getClienteModelOld() {
+        ClienteModel cliente = new ClienteModel();
         cliente.setId(2L);
         cliente.setNomeUm("Vitória e Gael Contábil Ltda");
         cliente.setNomeDois("Vitória e Gael Contábil Ltda");
