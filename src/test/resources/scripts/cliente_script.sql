@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `cliente` (
 /*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
 INSERT INTO `cliente` (`id`, `nomeum`, `nomedois`, `registrounico`, `registrogeral`, `dataorigem`, `site`, `tipo`, `situacao`, `datahorainc`, `datahoraalt`, `datahoradel`) VALUES
 	(1, 'Heitor e Daniela Assessoria Jurídica Ltda', 'Heitor e Daniela Assessoria Jurídica Ltda', '23958403000143', '4412205885', '2017-01-23', 'www.heitoredanielaassessoriajuridicaltda.com.br', 'J', 1, '2022-07-27 12:54:59', '2022-07-27 12:55:01', '2022-07-27 12:55:02'),
-	(2, 'Vitória e Gael Contábil Ltda', 'Vitória e Gael Contábil Ltda', '58904448000110', '1112568375', '2017-01-23', 'www.vitoriaegaelcontabilltda.com.br', 'J', 1, '2022-07-27 12:54:59', '2022-07-27 12:55:01', '2022-07-27 12:55:02'),
+	(2, 'TESTE', 'TESTE', '58904448000110', '1112568375', '2017-01-23', 'www.vitoriaegaelcontabilltda.com.br', 'J', 1, '2022-07-27 12:54:59', '2022-07-27 12:55:01', '2022-07-27 12:55:02'),
 	(3, 'Sebastiana', 'Débora Liz Moraes', '25249650902', '488851294', '2017-01-23', NULL, 'F', 1, '2022-07-27 12:54:59', '2022-07-27 12:55:01', '2022-07-27 12:55:02'),
 	(4, 'Mariane', 'Sueli Silva', '20024439983', '388894179', '2017-01-23', NULL, 'F', 0, '2022-07-27 12:54:59', '2022-07-27 12:55:01', '2022-07-27 12:55:02'),
 	(5, 'Nina', 'Catarina Alice Dias', '93914568984', '93914568984', '2017-01-23', NULL, 'F', 1, '2022-07-27 12:54:59', '2022-07-27 12:55:01', '2022-07-27 12:55:02');

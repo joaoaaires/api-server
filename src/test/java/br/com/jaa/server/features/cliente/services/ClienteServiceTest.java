@@ -1,10 +1,12 @@
 package br.com.jaa.server.features.cliente.services;
 
 import br.com.jaa.server.features.cliente.ClienteAssertions;
+import br.com.jaa.server.features.cliente.enums.ClienteServiceMessageEnum;
 import br.com.jaa.server.features.cliente.models.ClienteModel;
 import br.com.jaa.server.features.cliente.models.ClienteModelFixture;
 import br.com.jaa.server.features.shared.models.ObjectResponseModel;
 import br.com.jaa.server.features.usuario.UsuarioAssertions;
+import br.com.jaa.server.features.usuario.enums.UsuarioServiceMessageEnum;
 import br.com.jaa.server.features.usuario.models.UsuarioModel;
 import br.com.jaa.server.features.usuario.models.UsuarioModelFixture;
 import org.junit.jupiter.api.Assertions;
@@ -35,6 +37,59 @@ public class ClienteServiceTest {
         ClienteModel clienteModelActual = objectResponseActual.getData();
 
         ClienteAssertions.assertionsClienteModel(clienteModelExpected, clienteModelActual);
+    }
+
+    @Test
+    void createExistsByRegistroUnico() {
+        ClienteModel clienteModelExpected = ClienteModelFixture.getClienteModelOld();
+
+        ObjectResponseModel<ClienteModel> objectResponseActual = clienteService.create(clienteModelExpected);
+
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
+        Assertions.assertNull(objectResponseActual.getData());
+        Assertions.assertNotNull(objectResponseActual.getMessage());
+        Assertions.assertEquals(ClienteServiceMessageEnum.CLIENTE_CADASTRADO.name(), objectResponseActual.getMessage());
+    }
+
+    @Test
+    void readById() {
+        ClienteModel clienteModelExpected = ClienteModelFixture.getClienteModelOld();
+
+        ObjectResponseModel<ClienteModel> objectResponseActual = clienteService.readById(
+                String.valueOf(clienteModelExpected.getId())
+        );
+
+        assertionsObjectResponseModel(objectResponseActual);
+
+        ClienteModel clienteModelActual = objectResponseActual.getData();
+
+        ClienteAssertions.assertionsClienteModel(clienteModelExpected, clienteModelActual);
+    }
+
+    @Test
+    void readByIdErrorInvalido() {
+
+        ObjectResponseModel<ClienteModel> objectResponseActual = clienteService.readById(
+                String.valueOf(-1)
+        );
+
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
+        Assertions.assertNull(objectResponseActual.getData());
+        Assertions.assertNotNull(objectResponseActual.getMessage());
+        Assertions.assertEquals(ClienteServiceMessageEnum.CLIENTE_ID_INVALIDO.name(), objectResponseActual.getMessage());
+    }
+
+    @Test
+    void readByIdErrorNotFound() {
+
+        ObjectResponseModel<ClienteModel> objectResponseActual = clienteService.readById(
+                String.valueOf(9999L)
+        );
+
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
+        Assertions.assertNull(objectResponseActual.getData());
+        Assertions.assertNotNull(objectResponseActual.getMessage());
+        Assertions.assertEquals(ClienteServiceMessageEnum.CLIENTE_NAO_ENCONTRADO.name(), objectResponseActual.getMessage());
     }
 
     private void assertionsObjectResponseModel(ObjectResponseModel<ClienteModel> objectResponseActual) {

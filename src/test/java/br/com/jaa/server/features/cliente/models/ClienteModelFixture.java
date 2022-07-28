@@ -49,8 +49,8 @@ public class ClienteModelFixture {
     public static ClienteModel getClienteModelOld() {
         ClienteModel cliente = new ClienteModel();
         cliente.setId(2L);
-        cliente.setNomeUm("Vitória e Gael Contábil Ltda");
-        cliente.setNomeDois("Vitória e Gael Contábil Ltda");
+        cliente.setNomeUm("TESTE");
+        cliente.setNomeDois("TESTE");
         cliente.setRegistroUnico("58904448000110");
         cliente.setRegistroGeral("1112568375");
 
@@ -62,20 +62,20 @@ public class ClienteModelFixture {
             ex.printStackTrace();
         }
 
-        cliente.setSite("www.teste.com.br");
-        cliente.setTipo("F");
-        cliente.setSituacao(0);
+        cliente.setSite("www.vitoriaegaelcontabilltda.com.br");
+        cliente.setTipo("J");
+        cliente.setSituacao(1);
 
         try {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-            Timestamp timestamp = new Timestamp(formatter.parse("2022-05-18 16:33:01").getTime());
+            Timestamp timestamp = new Timestamp(formatter.parse("2022-07-27 12:54:59").getTime());
             cliente.setDataHoraInc(timestamp);
 
-            timestamp = new Timestamp(formatter.parse("2022-05-18 16:35:03").getTime());
+            timestamp = new Timestamp(formatter.parse("2022-07-27 12:54:59").getTime());
             cliente.setDataHoraAlt(timestamp);
 
-            timestamp = new Timestamp(formatter.parse("2022-05-18 16:36:04").getTime());
+            timestamp = new Timestamp(formatter.parse("2022-07-27 12:54:59").getTime());
             cliente.setDataHoraDel(timestamp);
         } catch (Exception ex) {
             ex.printStackTrace();
