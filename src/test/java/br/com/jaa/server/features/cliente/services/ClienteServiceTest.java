@@ -81,10 +81,61 @@ public class ClienteServiceTest {
 
     @Test
     void readByIdErrorNotFound() {
-
         ObjectResponseModel<ClienteModel> objectResponseActual = clienteService.readById(
                 String.valueOf(9999L)
         );
+
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
+        Assertions.assertNull(objectResponseActual.getData());
+        Assertions.assertNotNull(objectResponseActual.getMessage());
+        Assertions.assertEquals(ClienteServiceMessageEnum.CLIENTE_NAO_ENCONTRADO.name(), objectResponseActual.getMessage());
+    }
+
+    @Test
+    void update() {
+        ClienteModel clienteModelExpected = ClienteModelFixture.getClienteModelOld();
+
+        ObjectResponseModel<ClienteModel> objectResponseActual = clienteService.update(clienteModelExpected);
+
+        assertionsObjectResponseModel(objectResponseActual);
+
+        ClienteModel clienteModelActual = objectResponseActual.getData();
+
+        ClienteAssertions.assertionsClienteModel(clienteModelExpected, clienteModelActual);
+    }
+
+    @Test
+    void updateIdNull() {
+        ClienteModel clienteModelExpected = ClienteModelFixture.getClienteModelOld();
+        clienteModelExpected.setId(null);
+
+        ObjectResponseModel<ClienteModel> objectResponseActual = clienteService.update(clienteModelExpected);
+
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
+        Assertions.assertNull(objectResponseActual.getData());
+        Assertions.assertNotNull(objectResponseActual.getMessage());
+        Assertions.assertEquals(ClienteServiceMessageEnum.CLIENTE_ID_INVALIDO.name(), objectResponseActual.getMessage());
+    }
+
+    @Test
+    void updateIdZero() {
+        ClienteModel clienteModelExpected = ClienteModelFixture.getClienteModelOld();
+        clienteModelExpected.setId(0L);
+
+        ObjectResponseModel<ClienteModel> objectResponseActual = clienteService.update(clienteModelExpected);
+
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
+        Assertions.assertNull(objectResponseActual.getData());
+        Assertions.assertNotNull(objectResponseActual.getMessage());
+        Assertions.assertEquals(ClienteServiceMessageEnum.CLIENTE_ID_INVALIDO.name(), objectResponseActual.getMessage());
+    }
+
+    @Test
+    void updateNotFound() {
+        ClienteModel clienteModelExpected = ClienteModelFixture.getClienteModelOld();
+        clienteModelExpected.setId(9999L);
+
+        ObjectResponseModel<ClienteModel> objectResponseActual = clienteService.update(clienteModelExpected);
 
         Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
         Assertions.assertNull(objectResponseActual.getData());

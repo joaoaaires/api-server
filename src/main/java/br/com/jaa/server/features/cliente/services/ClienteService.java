@@ -77,11 +77,28 @@ public class ClienteService {
     }
 
     public ObjectResponseModel<ClienteModel> update(ClienteModel clienteModel) {
+        try {
+            if (clienteModel.getId() == null || clienteModel.getId() <= 0) {
+                throw new ApiServerException(ClienteServiceMessageEnum.CLIENTE_ID_INVALIDO.name());
+            }
 
-        return objectResponseModelUtil.getObjectResponse(
-                HttpStatus.BAD_REQUEST,
-                null
-        );
+            Optional<Cliente> optionalCliente = clienteCrudRepository.findById(clienteModel.getId());
+            if (optionalCliente.isEmpty()) {
+                throw new ApiServerException(ClienteServiceMessageEnum.CLIENTE_NAO_ENCONTRADO.name());
+            }
+
+            Cliente cliente = clienteCrudRepository.save((Cliente) clienteModel);
+            clienteModel = ClienteModel.fromCliente(cliente);
+            return objectResponseModelUtil.getObjectResponse(
+                    HttpStatus.OK,
+                    clienteModel
+            );
+        } catch (ApiServerException exception) {
+            return objectResponseModelUtil.getObjectResponse(
+                    HttpStatus.BAD_REQUEST,
+                    exception.getMessage()
+            );
+        }
     }
 
     public ObjectResponseModel<ClienteModel> delete(ClienteModel clienteModel) {

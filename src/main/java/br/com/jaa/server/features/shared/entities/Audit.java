@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 public abstract class Audit {
 
     @Column("datahorainc")
+
     private Timestamp dataHoraInc;
     @Column("datahoraalt")
     private Timestamp dataHoraAlt;

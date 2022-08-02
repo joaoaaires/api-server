@@ -1,6 +1,5 @@
 package br.com.jaa.server.features;
 
-import br.com.jaa.server.core.security.TestSecurityConfig;
 import br.com.jaa.server.features.shared.models.ObjectResponseModel;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,8 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        classes = TestSecurityConfig.class
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+//        classes = TestSecurityConfig.class
 )
 public class IndexControllerTest {
 
