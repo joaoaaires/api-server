@@ -11,8 +11,10 @@ import br.com.jaa.server.features.usuario.models.UsuarioModel;
 import br.com.jaa.server.features.usuario.repositories.UsuarioCrudRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.Optional;
 
 @Service
@@ -24,8 +26,8 @@ public class UsuarioService {
     @Autowired
     private ObjectResponseModelUtil objectResponseModelUtil;
 
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public ObjectResponseModel<UsuarioModel> create(UsuarioModel usuarioModel) {
         try {
@@ -35,9 +37,10 @@ public class UsuarioService {
             }
 
             usuarioModel.setId(null);
+            usuarioModel.setDataHoraInc(new Timestamp(System.currentTimeMillis()));
 
-//            String passwordCrypt = passwordEncoder.encode(usuarioModel.getPassword());
-//            usuarioModel.setPassword(passwordCrypt);
+            String passwordCrypt = passwordEncoder.encode(usuarioModel.getPassword());
+            usuarioModel.setPassword(passwordCrypt);
 
             Usuario usuario = usuarioCrudRepository.save((Usuario) usuarioModel);
             usuarioModel = UsuarioModel.fromUsuario(usuario);
@@ -87,8 +90,10 @@ public class UsuarioService {
                 throw new ApiServerException(UsuarioServiceMessageEnum.USUARIO_NAO_ENCONTRADO.getCode());
             }
 
-//            String passwordCrypt = passwordEncoder.encode(usuarioModel.getPassword());
-//            usuarioModel.setPassword(passwordCrypt);
+            usuarioModel.setDataHoraAlt(new Timestamp(System.currentTimeMillis()));
+
+            String passwordCrypt = passwordEncoder.encode(usuarioModel.getPassword());
+            usuarioModel.setPassword(passwordCrypt);
 
             Usuario usuario = usuarioCrudRepository.save((Usuario) usuarioModel);
             usuarioModel = UsuarioModel.fromUsuario(usuario);
