@@ -19,11 +19,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-//                .cors()
-//                .and()
-//                .csrf().disable()
+                .cors()
+                .and()
+                .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/swagger-ui/**", "/javainuse-openapi/**").permitAll()
+                .antMatchers("/swagger-ui/**", "/v3/api-docs/**", "/javainuse-openapi/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/usuario/auth").permitAll()
                 .antMatchers(HttpMethod.GET, "/").permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -31,18 +32,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
-
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-    }
-
-    //    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.inMemoryAuthentication()
-//                .withUser("admin")
-//                .password(passwordEncoder().encode("admin"))
-//                .authorities("ADMIN");
-//    }
 
     @Bean
     public SecurityFilter securityFilter() throws Exception {

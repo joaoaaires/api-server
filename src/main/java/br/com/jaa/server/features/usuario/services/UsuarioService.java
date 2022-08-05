@@ -1,8 +1,7 @@
 package br.com.jaa.server.features.usuario.services;
 
 import br.com.jaa.server.core.exceptio.ApiServerException;
-import br.com.jaa.server.core.util.Convert;
-import br.com.jaa.server.core.util.ExceptionUtil;
+import br.com.jaa.server.core.util.ConvertUtil;
 import br.com.jaa.server.features.shared.models.ObjectResponseModel;
 import br.com.jaa.server.features.shared.utils.ObjectResponseModelUtil;
 import br.com.jaa.server.features.usuario.entities.Usuario;
@@ -15,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -58,7 +58,7 @@ public class UsuarioService {
 
     public ObjectResponseModel<UsuarioModel> readById(String id) {
         try {
-            Long idLong = Convert.toLong(id);
+            Long idLong = ConvertUtil.toLong(id);
 
             if (idLong <= 0) {
                 throw new ApiServerException(UsuarioServiceMessageEnum.USUARIO_ID_NAO_VALIDO.getCode());
@@ -123,6 +123,19 @@ public class UsuarioService {
         } else {
             return create(usuarioModel);
         }
+    }
+
+    public ObjectResponseModel<UsuarioModel> auth(Map<String, Object> params) {
+        String email = params.get("email").toString();
+        String password = params.get("password").toString();
+
+
+
+
+        return objectResponseModelUtil.getObjectResponse(
+                HttpStatus.OK,
+                null
+        );
     }
 
 }

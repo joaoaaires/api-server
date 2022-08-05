@@ -2,9 +2,9 @@ package br.com.jaa.server.core.util;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class Convert {
+public class ConvertUtil {
 
-    private Convert() {}
+    private ConvertUtil() {}
 
     public static Long toLong(String s) {
         if (s == null) return 0L;

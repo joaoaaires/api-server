@@ -10,7 +10,7 @@ public class ConvertTest {
         Long valueLong = 152L;
         String valueString = "152";
 
-        Long valueLongResult = Convert.toLong(valueString);
+        Long valueLongResult = ConvertUtil.toLong(valueString);
 
         Assertions.assertEquals(valueLong, valueLongResult);
     }
@@ -20,7 +20,7 @@ public class ConvertTest {
         Long valueLong = 0L;
         String valueString = null;
 
-        Long valueLongResult = Convert.toLong(valueString);
+        Long valueLongResult = ConvertUtil.toLong(valueString);
 
         Assertions.assertEquals(valueLong, valueLongResult);
     }
@@ -30,7 +30,7 @@ public class ConvertTest {
         Long valueLong = 0L;
         String valueString = "152A";
 
-        Long valueLongResult = Convert.toLong(valueString);
+        Long valueLongResult = ConvertUtil.toLong(valueString);
 
         Assertions.assertEquals(valueLong, valueLongResult);
     }
@@ -40,7 +40,7 @@ public class ConvertTest {
         Long valueLong = 0L;
         String valueString = "";
 
-        Long valueLongResult = Convert.toLong(valueString);
+        Long valueLongResult = ConvertUtil.toLong(valueString);
 
         Assertions.assertEquals(valueLong, valueLongResult);
     }

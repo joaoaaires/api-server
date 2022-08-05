@@ -1,16 +1,13 @@
 package br.com.jaa.server.features.cliente.services;
 
 import br.com.jaa.server.core.exceptio.ApiServerException;
-import br.com.jaa.server.core.util.Convert;
+import br.com.jaa.server.core.util.ConvertUtil;
 import br.com.jaa.server.features.cliente.entities.Cliente;
 import br.com.jaa.server.features.cliente.enums.ClienteServiceMessageEnum;
 import br.com.jaa.server.features.cliente.models.ClienteModel;
 import br.com.jaa.server.features.cliente.repositories.ClienteCrudRepository;
 import br.com.jaa.server.features.shared.models.ObjectResponseModel;
 import br.com.jaa.server.features.shared.utils.ObjectResponseModelUtil;
-import br.com.jaa.server.features.usuario.entities.Usuario;
-import br.com.jaa.server.features.usuario.enums.UsuarioServiceMessageEnum;
-import br.com.jaa.server.features.usuario.models.UsuarioModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -51,7 +48,7 @@ public class ClienteService {
 
     public ObjectResponseModel<ClienteModel> readById(String id) {
         try {
-            Long idLong = Convert.toLong(id);
+            Long idLong = ConvertUtil.toLong(id);
 
             if (idLong <= 0) {
                 throw new ApiServerException(ClienteServiceMessageEnum.CLIENTE_ID_INVALIDO.name());

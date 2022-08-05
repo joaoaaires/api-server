@@ -3,11 +3,20 @@ package br.com.jaa.server.features.usuario.controllers;
 import br.com.jaa.server.features.shared.models.ObjectResponseModel;
 import br.com.jaa.server.features.usuario.models.UsuarioModel;
 import br.com.jaa.server.features.usuario.services.UsuarioService;
+import io.swagger.v3.core.model.ApiDescription;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/usuario")
@@ -17,6 +26,7 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @PostMapping(value = "/create")
+    @SecurityRequirement(name = "authorization")
     public ResponseEntity<ObjectResponseModel<UsuarioModel>> create(
             @RequestBody UsuarioModel usuarioModel
     ) {
@@ -25,6 +35,7 @@ public class UsuarioController {
     }
 
     @GetMapping(value = "/read/{id}")
+    @SecurityRequirement(name = "authorization")
     public ResponseEntity<ObjectResponseModel<UsuarioModel>> readById(
             @PathVariable("id") String id
     ) {
@@ -33,6 +44,7 @@ public class UsuarioController {
     }
 
     @PostMapping(value = "/update")
+    @SecurityRequirement(name = "authorization")
     public ResponseEntity<ObjectResponseModel<UsuarioModel>> update(
             @RequestBody UsuarioModel usuarioModel
     ) {
@@ -41,6 +53,7 @@ public class UsuarioController {
     }
 
     @PostMapping(value = "/delete")
+    @SecurityRequirement(name = "authorization")
     public ResponseEntity<ObjectResponseModel<UsuarioModel>> delete(
             @RequestBody UsuarioModel usuarioModel
     ) {
@@ -49,10 +62,28 @@ public class UsuarioController {
     }
 
     @PostMapping(value = "")
+    @SecurityRequirement(name = "authorization")
     public ResponseEntity<ObjectResponseModel<UsuarioModel>> save(
             @RequestBody UsuarioModel usuarioModel
     ) {
         ObjectResponseModel<UsuarioModel> responseModel = usuarioService.save(usuarioModel);
+        return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
+    }
+
+    @PostMapping(value = "/auth")
+    @Operation(
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(
+                            schema = @Schema(
+                                    example = "{ \"email\":\"string\", \"password\":\"string\" }"
+                            )
+                    )
+            )
+    )
+    public ResponseEntity<ObjectResponseModel<UsuarioModel>> auth(
+            @RequestBody Map<String, Object> params
+    ) {
+        ObjectResponseModel<UsuarioModel> responseModel = usuarioService.auth(params);
         return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
     }
 
