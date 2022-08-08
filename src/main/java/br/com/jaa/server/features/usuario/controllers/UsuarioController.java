@@ -62,6 +62,13 @@ public class UsuarioController {
         return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
     }
 
+    @GetMapping(value = "")
+    @SecurityRequirement(name = "authorization")
+    public ResponseEntity<ObjectResponseModel<UsuarioModel>> read() {
+        ObjectResponseModel<UsuarioModel> responseModel = usuarioService.read();
+        return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
+    }
+
     @PostMapping(value = "")
     @SecurityRequirement(name = "authorization")
     public ResponseEntity<ObjectResponseModel<UsuarioModel>> save(
@@ -103,7 +110,7 @@ public class UsuarioController {
             @RequestBody Map<String, Object> params,
             HttpServletResponse httpResponse
     ) {
-        ObjectResponseModel<UsuarioModel> responseModel = usuarioService.signUp(params, httpResponse);
+        ObjectResponseModel<UsuarioModel> responseModel = usuarioService.signUp(params);
         return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
     }
 

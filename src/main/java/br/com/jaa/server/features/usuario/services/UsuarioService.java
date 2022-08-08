@@ -126,6 +126,13 @@ public class UsuarioService {
         );
     }
 
+    public ObjectResponseModel<UsuarioModel> read() {
+        return objectResponseModelUtil.getObjectResponse(
+                HttpStatus.OK,
+                null
+        );
+    }
+
     public ObjectResponseModel<UsuarioModel> save(UsuarioModel usuarioModel) {
         if (usuarioModel.getId() != null && usuarioModel.getId() != 0) {
             return update(usuarioModel);
@@ -142,13 +149,12 @@ public class UsuarioService {
             String email = params.get("email").toString();
             String password = params.get("password").toString();
 
-            if (!validationUtil.isNotNullNotEmpty(email) ||
-                    !validationUtil.isNotNullNotEmpty(password)) {
-                throw new ApiServerException(UsuarioServiceMessageEnum.USUARIO_INFO_INVALIDA.name());
+            ObjectResponseModel responseValidate = validate(email, password);
+            if (responseValidate.getStatus() != HttpStatus.OK.value()) {
+                return responseValidate;
             }
 
             Usuario usuario = usuarioCrudRepository.findByEmail(email);
-
             if (usuario == null) {
                 throw new ApiServerException(UsuarioServiceMessageEnum.USUARIO_INFO_INVALIDA.name());
             }
@@ -179,8 +185,7 @@ public class UsuarioService {
     }
 
     public ObjectResponseModel<UsuarioModel> signUp(
-            Map<String, Object> params,
-            HttpServletResponse httpResponse
+            Map<String, Object> params
     ) {
         try {
             String email = params.get("email").toString();
@@ -199,16 +204,16 @@ public class UsuarioService {
             UsuarioModel usuarioModel = new UsuarioModel();
             usuarioModel.setId(null);
             usuarioModel.setEmail(email);
-            usuarioModel.setPassword(passwordEncoder.encode(usuarioModel.getPassword()));
+            usuarioModel.setPassword(passwordEncoder.encode(password));
             usuarioModel.setSituacao(1);
             usuarioModel.setDataHoraSyc(new Timestamp(System.currentTimeMillis()));
             usuarioModel.setDataHoraInc(new Timestamp(System.currentTimeMillis()));
 
-            Usuario usuario = usuarioCrudRepository.save((Usuario) usuarioModel);
-            usuarioModel = UsuarioModel.fromUsuario(usuario);
+            usuarioCrudRepository.save((Usuario) usuarioModel);
+
             return objectResponseModelUtil.getObjectResponse(
                     HttpStatus.OK,
-                    usuarioModel
+                    UsuarioServiceMessageEnum.USUARIO_SUCESS_USUARIO_CADASTRADO.name()
             );
         } catch (ApiServerException exception) {
             return objectResponseModelUtil.getObjectResponse(
