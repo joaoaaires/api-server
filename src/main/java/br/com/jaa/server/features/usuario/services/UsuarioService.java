@@ -1,7 +1,9 @@
 package br.com.jaa.server.features.usuario.services;
 
 import br.com.jaa.server.core.exceptio.ApiServerException;
+import br.com.jaa.server.core.security.SecurityToken;
 import br.com.jaa.server.core.util.ConvertUtil;
+import br.com.jaa.server.core.util.ValidationUtil;
 import br.com.jaa.server.features.shared.models.ObjectResponseModel;
 import br.com.jaa.server.features.shared.utils.ObjectResponseModelUtil;
 import br.com.jaa.server.features.usuario.entities.Usuario;
@@ -13,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
 import java.util.Map;
 import java.util.Optional;
@@ -29,11 +32,17 @@ public class UsuarioService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private SecurityToken securityToken;
+
+    @Autowired
+    private ValidationUtil validationUtil;
+
     public ObjectResponseModel<UsuarioModel> create(UsuarioModel usuarioModel) {
         try {
             boolean existsByEmail = usuarioCrudRepository.existsByEmail(usuarioModel.getEmail());
             if (existsByEmail) {
-                throw new ApiServerException(UsuarioServiceMessageEnum.USUARIO_CADASTRADO.getCode());
+                throw new ApiServerException(UsuarioServiceMessageEnum.USUARIO_CADASTRADO.name());
             }
 
             usuarioModel.setId(null);
@@ -61,13 +70,13 @@ public class UsuarioService {
             Long idLong = ConvertUtil.toLong(id);
 
             if (idLong <= 0) {
-                throw new ApiServerException(UsuarioServiceMessageEnum.USUARIO_ID_NAO_VALIDO.getCode());
+                throw new ApiServerException(UsuarioServiceMessageEnum.USUARIO_ID_NAO_VALIDO.name());
             }
 
             Optional<Usuario> optionalUsuario = usuarioCrudRepository.findById(idLong);
 
             if (optionalUsuario.isEmpty()) {
-                throw new ApiServerException(UsuarioServiceMessageEnum.USUARIO_NAO_ENCONTRADO.getCode());
+                throw new ApiServerException(UsuarioServiceMessageEnum.USUARIO_NAO_ENCONTRADO.name());
             }
 
             UsuarioModel usuarioModel = UsuarioModel.fromUsuario(optionalUsuario.get());
@@ -87,7 +96,7 @@ public class UsuarioService {
         try {
             boolean existsById = usuarioCrudRepository.existsById(usuarioModel.getId());
             if (!existsById) {
-                throw new ApiServerException(UsuarioServiceMessageEnum.USUARIO_NAO_ENCONTRADO.getCode());
+                throw new ApiServerException(UsuarioServiceMessageEnum.USUARIO_NAO_ENCONTRADO.name());
             }
 
             usuarioModel.setDataHoraAlt(new Timestamp(System.currentTimeMillis()));
@@ -125,17 +134,108 @@ public class UsuarioService {
         }
     }
 
-    public ObjectResponseModel<UsuarioModel> auth(Map<String, Object> params) {
-        String email = params.get("email").toString();
-        String password = params.get("password").toString();
+    public ObjectResponseModel<UsuarioModel> signIn(
+            Map<String, Object> params,
+            HttpServletResponse httpResponse
+    ) {
+        try {
+            String email = params.get("email").toString();
+            String password = params.get("password").toString();
 
+            if (!validationUtil.isNotNullNotEmpty(email) ||
+                    !validationUtil.isNotNullNotEmpty(password)) {
+                throw new ApiServerException(UsuarioServiceMessageEnum.USUARIO_INFO_INVALIDA.name());
+            }
 
+            Usuario usuario = usuarioCrudRepository.findByEmail(email);
 
+            if (usuario == null) {
+                throw new ApiServerException(UsuarioServiceMessageEnum.USUARIO_INFO_INVALIDA.name());
+            }
 
-        return objectResponseModelUtil.getObjectResponse(
-                HttpStatus.OK,
-                null
-        );
+            boolean isPasswordMatch = passwordEncoder.matches(password, usuario.getPassword());
+            if (!isPasswordMatch) {
+                throw new ApiServerException(UsuarioServiceMessageEnum.USUARIO_INFO_INVALIDA.name());
+            }
+
+            securityToken.generateToken(
+                    usuario.getId(),
+                    usuario.getEmail(),
+                    usuario.getPassword(),
+                    httpResponse
+            );
+
+            UsuarioModel usuarioModel = UsuarioModel.fromUsuario(usuario);
+            return objectResponseModelUtil.getObjectResponse(
+                    HttpStatus.OK,
+                    usuarioModel
+            );
+        } catch (ApiServerException exception) {
+            return objectResponseModelUtil.getObjectResponse(
+                    HttpStatus.BAD_REQUEST,
+                    exception.getMessage()
+            );
+        }
+    }
+
+    public ObjectResponseModel<UsuarioModel> signUp(
+            Map<String, Object> params,
+            HttpServletResponse httpResponse
+    ) {
+        try {
+            String email = params.get("email").toString();
+            String password = params.get("password").toString();
+
+            ObjectResponseModel responseValidate = validate(email, password);
+            if (responseValidate.getStatus() != HttpStatus.OK.value()) {
+                return responseValidate;
+            }
+
+            boolean existsByEmail = usuarioCrudRepository.existsByEmail(email);
+            if (existsByEmail) {
+                throw new ApiServerException(UsuarioServiceMessageEnum.USUARIO_ERROR_EMAIL_JA_CADASTRADO.name());
+            }
+
+            UsuarioModel usuarioModel = new UsuarioModel();
+            usuarioModel.setId(null);
+            usuarioModel.setEmail(email);
+            usuarioModel.setPassword(passwordEncoder.encode(usuarioModel.getPassword()));
+            usuarioModel.setSituacao(1);
+            usuarioModel.setDataHoraSyc(new Timestamp(System.currentTimeMillis()));
+            usuarioModel.setDataHoraInc(new Timestamp(System.currentTimeMillis()));
+
+            Usuario usuario = usuarioCrudRepository.save((Usuario) usuarioModel);
+            usuarioModel = UsuarioModel.fromUsuario(usuario);
+            return objectResponseModelUtil.getObjectResponse(
+                    HttpStatus.OK,
+                    usuarioModel
+            );
+        } catch (ApiServerException exception) {
+            return objectResponseModelUtil.getObjectResponse(
+                    HttpStatus.BAD_REQUEST,
+                    exception.getMessage()
+            );
+        }
+    }
+
+    private ObjectResponseModel<String> validate(String email, String password) {
+        // VALIDAR SE LOGIN FOI INFORMADO
+        if (!validationUtil.isNotNullNotEmpty(email)) {
+            return objectResponseModelUtil.getObjectResponse(
+                    HttpStatus.BAD_REQUEST,
+                    UsuarioServiceMessageEnum.USUARIO_ERROR_EMAIL_INVALIDO.name()
+            );
+        }
+
+        // VALIDAR SE SENHA FOI INFORMADA
+        if (!validationUtil.isNotNullNotEmpty(password)) {
+            return objectResponseModelUtil.getObjectResponse(
+                    HttpStatus.BAD_REQUEST,
+                    UsuarioServiceMessageEnum.USUARIO_ERROR_PASSWORD_INVALIDO.name()
+            );
+        }
+
+        return objectResponseModelUtil.getObjectResponse(HttpStatus.OK, "OK");
     }
 
 }

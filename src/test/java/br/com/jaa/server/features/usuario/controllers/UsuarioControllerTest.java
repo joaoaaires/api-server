@@ -105,7 +105,7 @@ class UsuarioControllerTest {
 
         Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseModel.getStatus());
         Assertions.assertNotNull(objectResponseModel.getMessage());
-        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_ID_NAO_VALIDO.getCode(), objectResponseModel.getMessage());
+        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_ID_NAO_VALIDO.name(), objectResponseModel.getMessage());
         Assertions.assertNull(objectResponseModel.getData());
     }
 

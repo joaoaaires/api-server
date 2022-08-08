@@ -47,7 +47,7 @@ class UsuarioServiceTest {
         Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
         Assertions.assertNull(objectResponseActual.getData());
         Assertions.assertNotNull(objectResponseActual.getMessage());
-        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_CADASTRADO.getCode(), objectResponseActual.getMessage());
+        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_CADASTRADO.name(), objectResponseActual.getMessage());
     }
 
     @Test
@@ -67,7 +67,7 @@ class UsuarioServiceTest {
 
         Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
         Assertions.assertNotNull(objectResponseActual.getMessage());
-        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_ID_NAO_VALIDO.getCode(), objectResponseActual.getMessage());
+        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_ID_NAO_VALIDO.name(), objectResponseActual.getMessage());
         Assertions.assertNull(objectResponseActual.getData());
     }
 
@@ -77,7 +77,7 @@ class UsuarioServiceTest {
 
         Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
         Assertions.assertNotNull(objectResponseActual.getMessage());
-        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_ID_NAO_VALIDO.getCode(), objectResponseActual.getMessage());
+        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_ID_NAO_VALIDO.name(), objectResponseActual.getMessage());
         Assertions.assertNull(objectResponseActual.getData());
     }
 
@@ -87,7 +87,7 @@ class UsuarioServiceTest {
 
         Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
         Assertions.assertNotNull(objectResponseActual.getMessage());
-        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_ID_NAO_VALIDO.getCode(), objectResponseActual.getMessage());
+        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_ID_NAO_VALIDO.name(), objectResponseActual.getMessage());
         Assertions.assertNull(objectResponseActual.getData());
     }
 
@@ -97,7 +97,7 @@ class UsuarioServiceTest {
 
         Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
         Assertions.assertNotNull(objectResponseActual.getMessage());
-        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_NAO_ENCONTRADO.getCode(), objectResponseActual.getMessage());
+        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_NAO_ENCONTRADO.name(), objectResponseActual.getMessage());
         Assertions.assertNull(objectResponseActual.getData());
     }
 
@@ -107,7 +107,7 @@ class UsuarioServiceTest {
 
         Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
         Assertions.assertNotNull(objectResponseActual.getMessage());
-        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_ID_NAO_VALIDO.getCode(), objectResponseActual.getMessage());
+        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_ID_NAO_VALIDO.name(), objectResponseActual.getMessage());
         Assertions.assertNull(objectResponseActual.getData());
     }
 
@@ -137,7 +137,7 @@ class UsuarioServiceTest {
 
         Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
         Assertions.assertNotNull(objectResponseActual.getMessage());
-        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_NAO_ENCONTRADO.getCode(), objectResponseActual.getMessage());
+        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_NAO_ENCONTRADO.name(), objectResponseActual.getMessage());
         Assertions.assertNull(objectResponseActual.getData());
     }
 

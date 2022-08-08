@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 @RestController
@@ -70,7 +71,7 @@ public class UsuarioController {
         return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
     }
 
-    @PostMapping(value = "/auth")
+    @PostMapping(value = "/signin")
     @Operation(
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
@@ -80,10 +81,29 @@ public class UsuarioController {
                     )
             )
     )
-    public ResponseEntity<ObjectResponseModel<UsuarioModel>> auth(
-            @RequestBody Map<String, Object> params
+    public ResponseEntity<ObjectResponseModel<UsuarioModel>> signIn(
+            @RequestBody Map<String, Object> params,
+            HttpServletResponse httpResponse
     ) {
-        ObjectResponseModel<UsuarioModel> responseModel = usuarioService.auth(params);
+        ObjectResponseModel<UsuarioModel> responseModel = usuarioService.signIn(params, httpResponse);
+        return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
+    }
+
+    @PostMapping(value = "/signup")
+    @Operation(
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(
+                            schema = @Schema(
+                                    example = "{ \"email\":\"string\", \"password\":\"string\" }"
+                            )
+                    )
+            )
+    )
+    public ResponseEntity<ObjectResponseModel<UsuarioModel>> signUp(
+            @RequestBody Map<String, Object> params,
+            HttpServletResponse httpResponse
+    ) {
+        ObjectResponseModel<UsuarioModel> responseModel = usuarioService.signUp(params, httpResponse);
         return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
     }
 
