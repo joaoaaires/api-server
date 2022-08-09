@@ -2,6 +2,7 @@ package br.com.jaa.server.features.usuario.services;
 
 import br.com.jaa.server.core.exceptio.ApiServerException;
 import br.com.jaa.server.core.security.SecurityToken;
+import br.com.jaa.server.core.security.UsuarioLogged;
 import br.com.jaa.server.core.util.ConvertUtil;
 import br.com.jaa.server.core.util.ValidationUtil;
 import br.com.jaa.server.features.shared.models.ObjectResponseModel;
@@ -37,6 +38,9 @@ public class UsuarioService {
 
     @Autowired
     private ValidationUtil validationUtil;
+
+    @Autowired
+    private UsuarioLogged usuarioLogged;
 
     public ObjectResponseModel<UsuarioModel> create(UsuarioModel usuarioModel) {
         try {
@@ -127,10 +131,24 @@ public class UsuarioService {
     }
 
     public ObjectResponseModel<UsuarioModel> read() {
-        return objectResponseModelUtil.getObjectResponse(
-                HttpStatus.OK,
-                null
-        );
+        try {
+            if (!usuarioLogged.isLogged()) {
+                throw new ApiServerException(
+                        UsuarioServiceMessageEnum.USUARIO_ERROR_NAO_LOGADO.name()
+                );
+            }
+
+            UsuarioModel usuarioModel = UsuarioModel.fromUsuario(usuarioLogged);
+            return objectResponseModelUtil.getObjectResponse(
+                    HttpStatus.OK,
+                    usuarioModel
+            );
+        } catch (ApiServerException exception) {
+            return objectResponseModelUtil.getObjectResponse(
+                    HttpStatus.BAD_REQUEST,
+                    exception.getMessage()
+            );
+        }
     }
 
     public ObjectResponseModel<UsuarioModel> save(UsuarioModel usuarioModel) {
@@ -201,19 +219,20 @@ public class UsuarioService {
                 throw new ApiServerException(UsuarioServiceMessageEnum.USUARIO_ERROR_EMAIL_JA_CADASTRADO.name());
             }
 
-            UsuarioModel usuarioModel = new UsuarioModel();
-            usuarioModel.setId(null);
-            usuarioModel.setEmail(email);
-            usuarioModel.setPassword(passwordEncoder.encode(password));
-            usuarioModel.setSituacao(1);
-            usuarioModel.setDataHoraSyc(new Timestamp(System.currentTimeMillis()));
-            usuarioModel.setDataHoraInc(new Timestamp(System.currentTimeMillis()));
+            Usuario usuario = new Usuario();
+            usuario.setId(null);
+            usuario.setEmail(email);
+            usuario.setPassword(passwordEncoder.encode(password));
+            usuario.setSituacao(1);
+            usuario.setDataHoraSyc(new Timestamp(System.currentTimeMillis()));
+            usuario.setDataHoraInc(new Timestamp(System.currentTimeMillis()));
 
-            usuarioCrudRepository.save((Usuario) usuarioModel);
+            usuario = usuarioCrudRepository.save(usuario);
 
+            UsuarioModel usuarioModel = UsuarioModel.fromUsuario(usuario);
             return objectResponseModelUtil.getObjectResponse(
                     HttpStatus.OK,
-                    UsuarioServiceMessageEnum.USUARIO_SUCESS_USUARIO_CADASTRADO.name()
+                    usuarioModel
             );
         } catch (ApiServerException exception) {
             return objectResponseModelUtil.getObjectResponse(

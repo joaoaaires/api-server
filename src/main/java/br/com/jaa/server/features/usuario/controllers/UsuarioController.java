@@ -44,6 +44,13 @@ public class UsuarioController {
         return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
     }
 
+    @GetMapping(value = "")
+    @SecurityRequirement(name = "authorization")
+    public ResponseEntity<ObjectResponseModel<UsuarioModel>> read() {
+        ObjectResponseModel<UsuarioModel> responseModel = usuarioService.read();
+        return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
+    }
+
     @PostMapping(value = "/update")
     @SecurityRequirement(name = "authorization")
     public ResponseEntity<ObjectResponseModel<UsuarioModel>> update(
@@ -59,13 +66,6 @@ public class UsuarioController {
             @RequestBody UsuarioModel usuarioModel
     ) {
         ObjectResponseModel<UsuarioModel> responseModel = usuarioService.delete(usuarioModel);
-        return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
-    }
-
-    @GetMapping(value = "")
-    @SecurityRequirement(name = "authorization")
-    public ResponseEntity<ObjectResponseModel<UsuarioModel>> read() {
-        ObjectResponseModel<UsuarioModel> responseModel = usuarioService.read();
         return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
     }
 
@@ -107,8 +107,7 @@ public class UsuarioController {
             )
     )
     public ResponseEntity<ObjectResponseModel<UsuarioModel>> signUp(
-            @RequestBody Map<String, Object> params,
-            HttpServletResponse httpResponse
+            @RequestBody Map<String, Object> params
     ) {
         ObjectResponseModel<UsuarioModel> responseModel = usuarioService.signUp(params);
         return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
