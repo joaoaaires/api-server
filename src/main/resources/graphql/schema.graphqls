@@ -1,0 +1,12 @@
+type Query {
+    readAllLivro: [Livro]
+}
+
+type Mutation {
+    createLivro(descricao: String): Livro
+}
+
+type Livro {
+    id: ID!
+    descricao: String!
+}

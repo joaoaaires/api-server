@@ -27,8 +27,8 @@ import java.util.Optional;
 @Component
 public class SecurityFilter extends BasicAuthenticationFilter {
 
-    @Autowired
-    private UsuarioCrudRepository usuarioCrudRepository;
+//    @Autowired
+//    private UsuarioCrudRepository usuarioCrudRepository;
 
     @Autowired
     private SecurityHelper securityHelper;
@@ -47,6 +47,7 @@ public class SecurityFilter extends BasicAuthenticationFilter {
             FilterChain chain
     ) throws IOException, ServletException {
         try {
+            /*
             String token = httpRequest.getHeader("Authorization");
 
             String[] values = securityHelper.getIdAndToken(token);
@@ -73,6 +74,7 @@ public class SecurityFilter extends BasicAuthenticationFilter {
             securityHelper.gerarNovoToken(claims, usuario, httpResponse);
 
             usuarioLogged.set(usuario);
+            */
 
             List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
@@ -81,8 +83,8 @@ public class SecurityFilter extends BasicAuthenticationFilter {
                     authorities
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        }catch (ApiServerException ex) {
-            ex.printStackTrace();
+//        }catch (ApiServerException ex) {
+//            ex.printStackTrace();
         } finally {
             chain.doFilter(httpRequest, httpResponse);
         }
