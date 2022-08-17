@@ -3,15 +3,15 @@ package br.com.jaa.server.features.cliente.controllers;
 import br.com.jaa.server.features.cliente.models.ClienteModel;
 import br.com.jaa.server.features.cliente.services.ClienteService;
 import br.com.jaa.server.features.shared.models.ObjectResponseModel;
-import br.com.jaa.server.features.usuario.models.UsuarioModel;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/cliente")
-@SecurityRequirement(name = "authorization")
+//@SecurityRequirement(name = "authorization")
 public class ClienteController {
 
     @Autowired
@@ -30,6 +30,12 @@ public class ClienteController {
             @PathVariable("id") String id
     ) {
         ObjectResponseModel<ClienteModel> responseModel = clienteService.readById(id);
+        return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
+    }
+
+    @GetMapping(value = "/read/all")
+    public ResponseEntity<ObjectResponseModel<List<ClienteModel>>> readAll() {
+        ObjectResponseModel<List<ClienteModel>> responseModel = clienteService.readAll();
         return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
     }
 

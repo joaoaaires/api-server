@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -71,6 +73,17 @@ public class ClienteService {
                     exception.getMessage()
             );
         }
+    }
+
+    public ObjectResponseModel<List<ClienteModel>> readAll() {
+        Iterable<Cliente> clientes = clienteCrudRepository.findAll();
+
+        List<ClienteModel> listClienteModel = new ArrayList<>();
+        clientes.forEach((s) -> listClienteModel.add(ClienteModel.fromCliente(s)));
+        return objectResponseModelUtil.getObjectResponse(
+                HttpStatus.OK,
+                listClienteModel
+        );
     }
 
     public ObjectResponseModel<ClienteModel> update(ClienteModel clienteModel) {
