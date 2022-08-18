@@ -1,7 +1,6 @@
 package br.com.jaa.server.features.usuario.services;
 
 import br.com.jaa.server.core.exceptio.ApiServerException;
-import br.com.jaa.server.core.security.UsuarioLogged;
 import br.com.jaa.server.core.util.ConvertUtil;
 import br.com.jaa.server.core.util.ValidationUtil;
 import br.com.jaa.server.features.shared.models.ObjectResponseModel;
@@ -14,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -26,19 +23,10 @@ public class UsuarioService {
     private UsuarioCrudRepository usuarioCrudRepository;
 
     @Autowired
-    private ObjectResponseModelUtil objectResponseModelUtil;
-
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
-//
-//    @Autowired
-//    private SecurityToken securityToken;
-
-    @Autowired
     private ValidationUtil validationUtil;
 
     @Autowired
-    private UsuarioLogged usuarioLogged;
+    private ObjectResponseModelUtil objectResponseModelUtil;
 
     public ObjectResponseModel<UsuarioModel> create(UsuarioModel usuarioModel) {
         try {
@@ -140,89 +128,12 @@ public class UsuarioService {
         );
     }
 
-    public ObjectResponseModel<UsuarioModel> read() {
-        try {
-            if (!usuarioLogged.isLogged()) {
-                throw new ApiServerException(
-                        UsuarioServiceMessageEnum.USUARIO_ERROR_NAO_LOGADO.name()
-                );
-            }
-
-            UsuarioModel usuarioModel = UsuarioModel.fromUsuario(usuarioLogged);
-            return objectResponseModelUtil.getObjectResponse(
-                    HttpStatus.OK,
-                    usuarioModel
-            );
-        } catch (ApiServerException exception) {
-            return objectResponseModelUtil.getObjectResponse(
-                    HttpStatus.BAD_REQUEST,
-                    exception.getMessage()
-            );
-        }
-    }
-
     public ObjectResponseModel<UsuarioModel> save(UsuarioModel usuarioModel) {
         if (usuarioModel.getId() != null && usuarioModel.getId() != 0) {
             return update(usuarioModel);
         } else {
             return create(usuarioModel);
         }
-    }
-
-    public ObjectResponseModel<UsuarioModel> signIn(
-            Map<String, Object> params,
-            HttpServletResponse httpResponse
-    ) {
-        try {
-            String email = params.get("email").toString();
-            String password = params.get("password").toString();
-
-            ObjectResponseModel responseValidate = validate(email, password);
-            if (responseValidate.getStatus() != HttpStatus.OK.value()) {
-                return responseValidate;
-            }
-
-            Usuario usuario = usuarioCrudRepository.findByEmail(email);
-            if (usuario == null) {
-                throw new ApiServerException(UsuarioServiceMessageEnum.USUARIO_INFO_INVALIDA.name());
-            }
-
-//            boolean isPasswordMatch = passwordEncoder.matches(password, usuario.getPassword());
-//            if (!isPasswordMatch) {
-//                throw new ApiServerException(UsuarioServiceMessageEnum.USUARIO_INFO_INVALIDA.name());
-//            }
-//
-//            securityToken.generateToken(
-//                    usuario.getId(),
-//                    usuario.getEmail(),
-//                    usuario.getPassword(),
-//                    httpResponse
-//            );
-
-            UsuarioModel usuarioModel = UsuarioModel.fromUsuario(usuario);
-            return objectResponseModelUtil.getObjectResponse(
-                    HttpStatus.OK,
-                    usuarioModel
-            );
-        } catch (ApiServerException exception) {
-            return objectResponseModelUtil.getObjectResponse(
-                    HttpStatus.BAD_REQUEST,
-                    exception.getMessage()
-            );
-        }
-    }
-
-    public ObjectResponseModel<UsuarioModel> signUp(
-            Map<String, Object> params
-    ) {
-        UsuarioModel usuarioModel = new UsuarioModel();
-        usuarioModel.setId(null);
-        usuarioModel.setEmail(params.get("email").toString());
-        usuarioModel.setPassword(params.get("password").toString());
-        usuarioModel.setSituacao(1);
-        usuarioModel.setDataHoraSyc(new Timestamp(System.currentTimeMillis()));
-
-        return create(usuarioModel);
     }
 
     private ObjectResponseModel<String> validate(String email, String password) {

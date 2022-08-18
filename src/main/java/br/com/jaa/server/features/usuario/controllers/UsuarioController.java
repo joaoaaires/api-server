@@ -7,9 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
-
 @RestController
 @RequestMapping(value = "/usuario")
 public class UsuarioController {
@@ -18,7 +15,6 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @PostMapping(value = "/create")
-//    @SecurityRequirement(name = "authorization")
     public ResponseEntity<ObjectResponseModel<UsuarioModel>> create(
             @RequestBody UsuarioModel usuarioModel
     ) {
@@ -27,7 +23,6 @@ public class UsuarioController {
     }
 
     @GetMapping(value = "/read/{id}")
-//    @SecurityRequirement(name = "authorization")
     public ResponseEntity<ObjectResponseModel<UsuarioModel>> readById(
             @PathVariable("id") String id
     ) {
@@ -35,15 +30,7 @@ public class UsuarioController {
         return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
     }
 
-    @GetMapping(value = "")
-//    @SecurityRequirement(name = "authorization")
-    public ResponseEntity<ObjectResponseModel<UsuarioModel>> read() {
-        ObjectResponseModel<UsuarioModel> responseModel = usuarioService.read();
-        return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
-    }
-
     @PostMapping(value = "/update")
-//    @SecurityRequirement(name = "authorization")
     public ResponseEntity<ObjectResponseModel<UsuarioModel>> update(
             @RequestBody UsuarioModel usuarioModel
     ) {
@@ -52,7 +39,6 @@ public class UsuarioController {
     }
 
     @PostMapping(value = "/delete")
-//    @SecurityRequirement(name = "authorization")
     public ResponseEntity<ObjectResponseModel<UsuarioModel>> delete(
             @RequestBody UsuarioModel usuarioModel
     ) {
@@ -61,46 +47,10 @@ public class UsuarioController {
     }
 
     @PostMapping(value = "")
-//    @SecurityRequirement(name = "authorization")
     public ResponseEntity<ObjectResponseModel<UsuarioModel>> save(
             @RequestBody UsuarioModel usuarioModel
     ) {
         ObjectResponseModel<UsuarioModel> responseModel = usuarioService.save(usuarioModel);
-        return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
-    }
-
-    @PostMapping(value = "/signin")
-//    @Operation(
-//            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-//                    content = @Content(
-//                            schema = @Schema(
-//                                    example = "{ \"email\":\"string\", \"password\":\"string\" }"
-//                            )
-//                    )
-//            )
-//    )
-    public ResponseEntity<ObjectResponseModel<UsuarioModel>> signIn(
-            @RequestBody Map<String, Object> params,
-            HttpServletResponse httpResponse
-    ) {
-        ObjectResponseModel<UsuarioModel> responseModel = usuarioService.signIn(params, httpResponse);
-        return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
-    }
-
-    @PostMapping(value = "/signup")
-//    @Operation(
-//            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-//                    content = @Content(
-//                            schema = @Schema(
-//                                    example = "{ \"email\":\"string\", \"password\":\"string\" }"
-//                            )
-//                    )
-//            )
-//    )
-    public ResponseEntity<ObjectResponseModel<UsuarioModel>> signUp(
-            @RequestBody Map<String, Object> params
-    ) {
-        ObjectResponseModel<UsuarioModel> responseModel = usuarioService.signUp(params);
         return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
     }
 

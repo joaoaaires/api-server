@@ -23,3 +23,7 @@ server:
       - application/javascript
       - application/json
     min-response-size: 1024
+
+grpc:
+  server:
+    port: 8081
