@@ -42,3 +42,4 @@ secrets.yml
 .sts4-cache
 data.db
 data.mv.db
+sonar-project.properties
