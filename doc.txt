@@ -1,0 +1,33 @@
+gRPC: alternativa ao REST com Dart
+https://www.youtube.com/watch?v=RJ67P6aEekc&ab_channel=BrunoRangel
+
+protoc_plugin: ^20.0.1
+https://pub.dev/packages/protoc_plugin
+
+protobuf: ^2.1.0
+https://pub.dev/packages/protobuf/install
+
+gRPC Spring Boot Starter
+https://github.com/yidongnan/grpc-spring-boot-starter
+
+Introduction to gRPC
+https://www.baeldung.com/grpc-introduction
+
+gRPC-Java - An RPC library and framework
+https://github.com/grpc/grpc-java
+
+Quick start
+https://grpc.io/docs/languages/java/quickstart/
+
+gRPC with Spring Boot Example | Protobuf Stub & Skeleton | Tech Primers
+https://www.youtube.com/watch?v=2CWYorTWyGs&ab_channel=TechPrimers
+
+grpc-with-springboot/grpc-service/pom.xml
+https://github.com/DevProblems/grpc-with-springboot/blob/master/grpc-service/pom.xml
+https://www.youtube.com/watch?v=zCXN4wj0uPo&t=1563s&ab_channel=DevProblems
+
+gRPC protoc Flutter Dart Client
+https://docs.servicestack.net/grpc-flutter#flutter-protoc-generated-grpcserviceclient-example
+
+grpc-dart/example/helloworld/protos/helloworld.proto
+https://github.com/grpc/grpc-dart/blob/master/example/helloworld/protos/helloworld.proto
