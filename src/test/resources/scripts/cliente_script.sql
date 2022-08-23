@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `cliente` (
   `datahoraalt` datetime DEFAULT NULL,
   `datahoradel` datetime DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Copiando dados para a tabela api_test.cliente: ~5 rows (aproximadamente)
 /*!40000 ALTER TABLE `cliente` DISABLE KEYS */;

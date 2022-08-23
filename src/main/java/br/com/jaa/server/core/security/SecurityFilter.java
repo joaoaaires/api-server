@@ -24,17 +24,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-@Component
 public class SecurityFilter extends BasicAuthenticationFilter {
 
 //    @Autowired
 //    private UsuarioCrudRepository usuarioCrudRepository;
 
-    @Autowired
-    private SecurityHelper securityHelper;
-
-    @Autowired
-    private UsuarioLogged usuarioLogged;
+//    @Autowired
+//    private SecurityHelper securityHelper;
+//
+//    @Autowired
+//    private UsuarioLogged usuarioLogged;
 
     public SecurityFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
