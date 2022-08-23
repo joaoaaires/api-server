@@ -1,5 +1,6 @@
 package br.com.jaa.server.features.usuario.controllers;
 
+import br.com.jaa.server.core.security.TestSecurityConfig;
 import br.com.jaa.server.features.shared.models.ObjectResponseModel;
 import br.com.jaa.server.features.usuario.entities.Usuario;
 import br.com.jaa.server.features.usuario.enums.UsuarioServiceMessageEnum;
@@ -11,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
@@ -22,8 +23,8 @@ import java.util.Map;
 import java.util.TimeZone;
 
 @SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
-//        classes = TestSecurityConfig.class
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        classes = TestSecurityConfig.class
 )
 @Sql(
         value = {"/scripts/usuario_script.sql"},

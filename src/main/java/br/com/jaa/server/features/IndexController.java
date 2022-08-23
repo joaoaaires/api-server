@@ -23,7 +23,7 @@ public class IndexController {
     public ResponseEntity<ObjectResponseModel<Map<String, Object>>> index() {
         ObjectResponseModel<Map<String, Object>> responseModel = objectResponseModelUtil.getObjectResponse(
                 HttpStatus.OK,
-                "",
+                "Server Applicationn!",
                 new HashMap<>()
         );
         return ResponseEntity.status(responseModel.getStatus()).body(responseModel);

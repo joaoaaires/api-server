@@ -28,7 +28,7 @@ public class SecurityFilter extends BasicAuthenticationFilter {
 
 //    @Autowired
 //    private UsuarioCrudRepository usuarioCrudRepository;
-
+//
 //    @Autowired
 //    private SecurityHelper securityHelper;
 //
@@ -48,6 +48,8 @@ public class SecurityFilter extends BasicAuthenticationFilter {
         try {
             /*
             String token = httpRequest.getHeader("Authorization");
+
+            System.out.println("Authorization: " + token);
 
             String[] values = securityHelper.getIdAndToken(token);
 

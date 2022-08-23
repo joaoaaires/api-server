@@ -1,5 +1,6 @@
 package br.com.jaa.server.core.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -18,6 +19,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    @Autowired
+    SecurityConfigDsl securityConfigDsl;
+
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
@@ -26,7 +30,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.POST, "/usuario/signup", "/usuario/signin").permitAll()
                 .antMatchers(HttpMethod.GET, "/").permitAll()
                 .anyRequest().authenticated();
-        http.apply(SecurityConfigDsl.getInstance());
+        http.apply(securityConfigDsl);
         return http.build();
     }
 

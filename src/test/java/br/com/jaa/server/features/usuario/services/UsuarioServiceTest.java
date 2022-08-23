@@ -1,5 +1,6 @@
 package br.com.jaa.server.features.usuario.services;
 
+import br.com.jaa.server.core.security.UsuarioLogged;
 import br.com.jaa.server.features.shared.models.ObjectResponseModel;
 import br.com.jaa.server.features.usuario.UsuarioAssertions;
 import br.com.jaa.server.features.usuario.enums.UsuarioServiceMessageEnum;
@@ -25,6 +26,9 @@ class UsuarioServiceTest {
     @Autowired
     UsuarioService usuarioService;
 
+    @Autowired
+    UsuarioLogged usuarioLogged;
+
     @Test
     void create() {
         UsuarioModel usuarioModelExpected = UsuarioModelFixture.getUsuarioModelNew();
@@ -36,6 +40,32 @@ class UsuarioServiceTest {
         UsuarioModel usuarioModelActual = objectResponseActual.getData();
 
         UsuarioAssertions.assertionsUsuarioModel(usuarioModelExpected, usuarioModelActual);
+    }
+
+    @Test
+    void createErrorEmail() {
+        UsuarioModel usuarioModelExpected = UsuarioModelFixture.getUsuarioModelNew();
+        usuarioModelExpected.setEmail(null);
+
+        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.create(usuarioModelExpected);
+
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
+        Assertions.assertNull(objectResponseActual.getData());
+        Assertions.assertNotNull(objectResponseActual.getMessage());
+        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_ERROR_EMAIL_INVALIDO.name(), objectResponseActual.getMessage());
+    }
+
+    @Test
+    void createErrorPassword() {
+        UsuarioModel usuarioModelExpected = UsuarioModelFixture.getUsuarioModelNew();
+        usuarioModelExpected.setPassword(null);
+
+        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.create(usuarioModelExpected);
+
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
+        Assertions.assertNull(objectResponseActual.getData());
+        Assertions.assertNotNull(objectResponseActual.getMessage());
+        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_ERROR_PASSWORD_INVALIDO.name(), objectResponseActual.getMessage());
     }
 
     @Test

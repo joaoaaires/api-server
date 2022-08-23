@@ -1,20 +1,27 @@
-//package br.com.jaa.server.core.security;
-//
-//import org.springframework.boot.test.context.TestConfiguration;
-//import org.springframework.core.annotation.Order;
-//import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-//import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-//
-//@Order(1)
-//@TestConfiguration
-//public class TestSecurityConfig extends WebSecurityConfigurerAdapter {
-//
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        // Disable CSRF
-//        http.csrf().disable()
-//                // Permit all requests without authentication
-//                .authorizeRequests().anyRequest().permitAll();
-//    }
-//
-//}
+package br.com.jaa.server.core.security;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Order(1)
+@TestConfiguration
+@EnableWebSecurity
+public class TestSecurityConfig {
+
+    @Autowired
+    TestSecurityConfigDsl securityConfigDsl;
+
+    @Bean
+    protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.authorizeRequests().anyRequest().permitAll();
+        http.apply(securityConfigDsl);
+        return http.build();
+    }
+
+}

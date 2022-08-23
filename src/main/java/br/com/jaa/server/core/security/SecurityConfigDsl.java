@@ -5,7 +5,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SecurityConfigDsl extends AbstractHttpConfigurer<SecurityConfigDsl, HttpSecurity> {
 
     @Override
@@ -20,10 +22,6 @@ public class SecurityConfigDsl extends AbstractHttpConfigurer<SecurityConfigDsl,
                 .addFilter(new SecurityFilter(authenticationManager))
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-    }
-
-    public static SecurityConfigDsl getInstance() {
-        return new SecurityConfigDsl();
     }
 
 }

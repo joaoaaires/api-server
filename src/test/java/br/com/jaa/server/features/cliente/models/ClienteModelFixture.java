@@ -49,8 +49,8 @@ public class ClienteModelFixture {
     public static ClienteModel getClienteModelOld() {
         ClienteModel cliente = new ClienteModel();
         cliente.setId(2L);
-        cliente.setNomeUm("TESTE");
-        cliente.setNomeDois("TESTE");
+        cliente.setNomeUm("CLIENTE 2");
+        cliente.setNomeDois("CLIENTE 2");
         cliente.setRegistroUnico("58904448000110");
         cliente.setRegistroGeral("1112568375");
 

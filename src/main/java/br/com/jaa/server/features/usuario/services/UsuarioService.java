@@ -44,7 +44,7 @@ public class UsuarioService {
 
     public ObjectResponseModel<UsuarioModel> create(UsuarioModel usuarioModel) {
         try {
-            ObjectResponseModel responseValidate = validate(usuarioModel.getEmail(), usuarioModel.getPassword());
+            ObjectResponseModel<UsuarioModel> responseValidate = validate(usuarioModel.getEmail(), usuarioModel.getPassword());
             if (responseValidate.getStatus() != HttpStatus.OK.value()) {
                 return responseValidate;
             }
@@ -144,7 +144,8 @@ public class UsuarioService {
 
     public ObjectResponseModel<UsuarioModel> read() {
         try {
-            if (!usuarioLogged.isLogged()) {
+            Boolean isLogged = usuarioLogged.isLogged();
+            if (Boolean.FALSE.equals(isLogged)) {
                 throw new ApiServerException(
                         UsuarioServiceMessageEnum.USUARIO_ERROR_NAO_LOGADO.name()
                 );
@@ -227,7 +228,7 @@ public class UsuarioService {
         return create(usuarioModel);
     }
 
-    private ObjectResponseModel<String> validate(String email, String password) {
+    private ObjectResponseModel<UsuarioModel> validate(String email, String password) {
         // VALIDAR SE LOGIN FOI INFORMADO
         if (!validationUtil.isNotNullNotEmpty(email)) {
             return objectResponseModelUtil.getObjectResponse(
