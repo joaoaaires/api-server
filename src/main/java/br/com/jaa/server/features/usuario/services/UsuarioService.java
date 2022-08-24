@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Map;
 import java.util.Optional;
@@ -55,12 +56,11 @@ public class UsuarioService {
             }
 
             usuarioModel.setId(null);
-            usuarioModel.setPassword(passwordEncoder.encode(usuarioModel.getPassword()));
-            usuarioModel.setSituacao(1);
-            usuarioModel.setDataHoraInc(new Timestamp(System.currentTimeMillis()));
-
             String passwordCrypt = passwordEncoder.encode(usuarioModel.getPassword());
             usuarioModel.setPassword(passwordCrypt);
+            usuarioModel.setSituacao(1);
+            Timestamp dataHoraInc = new Timestamp(System.currentTimeMillis());
+            usuarioModel.setDataHoraInc(dataHoraInc);
 
             Usuario usuario = usuarioCrudRepository.save((Usuario) usuarioModel);
             usuarioModel = UsuarioModel.fromUsuario(usuario);
@@ -177,10 +177,10 @@ public class UsuarioService {
             HttpServletResponse httpResponse
     ) {
         try {
-            String email = params.get("email").toString();
-            String password = params.get("password").toString();
+            String email = String.valueOf(params.getOrDefault("email",""));
+            String password = String.valueOf(params.getOrDefault("password",""));
 
-            ObjectResponseModel responseValidate = validate(email, password);
+            ObjectResponseModel<UsuarioModel> responseValidate = validate(email, password);
             if (responseValidate.getStatus() != HttpStatus.OK.value()) {
                 return responseValidate;
             }
@@ -218,10 +218,13 @@ public class UsuarioService {
     public ObjectResponseModel<UsuarioModel> signUp(
             Map<String, Object> params
     ) {
+        String email = String.valueOf(params.getOrDefault("email",""));
+        String password = String.valueOf(params.getOrDefault("password",""));
+
         UsuarioModel usuarioModel = new UsuarioModel();
         usuarioModel.setId(null);
-        usuarioModel.setEmail(params.get("email").toString());
-        usuarioModel.setPassword(params.get("password").toString());
+        usuarioModel.setEmail(email);
+        usuarioModel.setPassword(password);
         usuarioModel.setSituacao(1);
         usuarioModel.setDataHoraSyc(new Timestamp(System.currentTimeMillis()));
 
