@@ -9,6 +9,7 @@ import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.configuration.GlobalAuthenticationConfigurerAdapter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,15 +27,8 @@ import java.util.Optional;
 
 public class SecurityFilter extends BasicAuthenticationFilter {
 
-//    @Autowired
-//    private UsuarioCrudRepository usuarioCrudRepository;
-//
-//    @Autowired
-//    private SecurityHelper securityHelper;
-//
-//    @Autowired
-//    private UsuarioLogged usuarioLogged;
 
+    @Autowired
     public SecurityFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
     }
@@ -46,6 +40,8 @@ public class SecurityFilter extends BasicAuthenticationFilter {
             FilterChain chain
     ) throws IOException, ServletException {
         try {
+            System.out.println("Authorization: token");
+
             /*
             String token = httpRequest.getHeader("Authorization");
 

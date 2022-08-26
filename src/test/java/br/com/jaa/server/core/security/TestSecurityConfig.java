@@ -11,16 +11,13 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Order(1)
 @TestConfiguration
-@EnableWebSecurity
 public class TestSecurityConfig {
 
-    @Autowired
-    TestSecurityConfigDsl securityConfigDsl;
-
     @Bean
+    @Order(1)
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        System.out.println("AQUIIIIIII");
         http.authorizeRequests().anyRequest().permitAll();
-        http.apply(securityConfigDsl);
         return http.build();
     }
 

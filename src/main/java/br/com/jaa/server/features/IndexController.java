@@ -29,4 +29,14 @@ public class IndexController {
         return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
     }
 
+    @GetMapping(value = "/test")
+    public ResponseEntity<ObjectResponseModel<Map<String, Object>>> test() {
+        ObjectResponseModel<Map<String, Object>> responseModel = objectResponseModelUtil.getObjectResponse(
+                HttpStatus.OK,
+                "Server Applicationn Test!",
+                new HashMap<>()
+        );
+        return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
+    }
+
 }

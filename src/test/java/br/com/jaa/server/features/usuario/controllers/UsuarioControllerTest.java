@@ -49,6 +49,7 @@ class UsuarioControllerTest {
     void create() {
         UsuarioModel usuarioModel = UsuarioModelFixture.getUsuarioModelNew();
 
+        System.out.println(url.concat("/create"));
         ResponseEntity<ObjectResponseModel> responseEntity = testRestTemplate.postForEntity(
                 url.concat("/create"),
                 usuarioModel,

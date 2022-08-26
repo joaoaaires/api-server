@@ -6,11 +6,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -19,20 +24,28 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    SecurityConfigDsl securityConfigDsl;
-
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http
+                .cors().and().csrf().disable()
+                .authorizeRequests()
                 .antMatchers("/swagger-ui/**", "/v3/api-docs/**", "/javainuse-openapi/**").permitAll()
                 .antMatchers("/graphql", "/graphql/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/usuario/signup", "/usuario/signin").permitAll()
                 .antMatchers(HttpMethod.GET, "/").permitAll()
-                .anyRequest().authenticated();
-        http.apply(securityConfigDsl);
+                .anyRequest().authenticated()
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         return http.build();
     }
+
+    /**
+     https://github.com/MaciejDromin/Tutorials/blob/main/jwttutorial/src/main/java/pl/mlisowski/jwttutorial/security/JwtAuthorizationFilter.java
+     https://www.appsdeveloperblog.com/migrating-from-deprecated-websecurityconfigureradapter/
+     *
+     * @return
+     */
 
     @Bean
     public SecurityToken securityToken() {
@@ -45,4 +58,6 @@ public class SecurityConfig {
     }
 
 }
+
+
 
