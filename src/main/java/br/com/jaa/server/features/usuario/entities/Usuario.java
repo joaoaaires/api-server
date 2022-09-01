@@ -1,6 +1,7 @@
 package br.com.jaa.server.features.usuario.entities;
 
 import br.com.jaa.server.features.shared.entities.Audit;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -21,6 +22,7 @@ public class Usuario extends Audit {
     @Column("situacao")
     private Integer situacao;
     @Column("datahorasyc")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Timestamp dataHoraSyc;
 
     public Long getId() {

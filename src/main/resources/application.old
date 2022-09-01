@@ -1,18 +1,12 @@
 spring:
   main:
     allow-bean-definition-overriding: true
-  cloud:
-    gcp:
-      sql:
-        database-name: api
-        instance-connection-name: api-server-361116:us-central1:db-dev
   datasource:
-#    url: jdbc:mariadb://localhost:3306/api
-#    username: root
-#    password: aA123qwe.joao
-#    driverClassName: org.mariadb.jdbc.Driver
-#    sqlScriptEncoding: UTF-8
-    initialization-mode: always
+    url: jdbc:mariadb://localhost:3306/api
+    username: root
+    password: 123321
+    driverClassName: org.mariadb.jdbc.Driver
+    sqlScriptEncoding: UTF-8
 
 server:
   port: ${PORT:8080}
