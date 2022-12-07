@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +24,7 @@ public class IndexController {
     public ResponseEntity<ObjectResponseModel<Map<String, Object>>> index() {
         ObjectResponseModel<Map<String, Object>> responseModel = objectResponseModelUtil.getObjectResponse(
                 HttpStatus.OK,
-                "Server Applicationn!",
+                "Server Application!",
                 new HashMap<>()
         );
         return ResponseEntity.status(responseModel.getStatus()).body(responseModel);
@@ -33,7 +34,7 @@ public class IndexController {
     public ResponseEntity<ObjectResponseModel<Map<String, Object>>> test() {
         ObjectResponseModel<Map<String, Object>> responseModel = objectResponseModelUtil.getObjectResponse(
                 HttpStatus.OK,
-                "Server Applicationn Test!",
+                "Server Application Test!",
                 new HashMap<>()
         );
         return ResponseEntity.status(responseModel.getStatus()).body(responseModel);

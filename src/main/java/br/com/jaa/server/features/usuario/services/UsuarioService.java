@@ -11,13 +11,12 @@ import br.com.jaa.server.features.usuario.entities.Usuario;
 import br.com.jaa.server.features.usuario.enums.UsuarioServiceMessageEnum;
 import br.com.jaa.server.features.usuario.models.UsuarioModel;
 import br.com.jaa.server.features.usuario.repositories.UsuarioCrudRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Map;
 import java.util.Optional;

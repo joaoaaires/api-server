@@ -3,10 +3,10 @@ package br.com.jaa.server.core.security;
 import br.com.jaa.server.core.exceptio.ApiServerException;
 import br.com.jaa.server.features.usuario.entities.Usuario;
 import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.Base64;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
