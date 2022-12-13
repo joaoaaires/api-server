@@ -4,17 +4,12 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.stream.Collectors;
 
 @Component
 public class SecurityToken {
@@ -43,28 +38,6 @@ public class SecurityToken {
         String encodedIdAndToken = Base64.getEncoder().encodeToString(idAndToken.getBytes());
 
         httpResponse.addHeader(SecurityConst.KEY_AUTH_RESPONSE, encodedIdAndToken);
-    }
-
-    public void generateToken(Authentication authentication, HttpServletResponse httpResponse) {
-//        Instant now = Instant.now();
-//        String scope = authentication.getAuthorities().stream()
-//                .map(GrantedAuthority::getAuthority)
-//                .collect(Collectors.joining(" "));
-//        JwtClaimsSet claims = JwtClaimsSet.builder()
-//                .issuer("self")
-//                .issuedAt(now)
-//                .expiresAt(now.plus(SecurityConst.DAYS_EXPIRATION, ChronoUnit.DAYS))
-//                .subject(authentication.getName())
-//                .claim("scope", scope)
-//                .build();
-//
-////        String token = encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-//        String token = "";
-//
-//        String idAndToken = 0 + ":" + token;
-//        String encodedIdAndToken = Base64.getEncoder().encodeToString(idAndToken.getBytes());
-//
-//        httpResponse.addHeader(SecurityConst.KEY_AUTH_RESPONSE, encodedIdAndToken);
     }
 
 }
