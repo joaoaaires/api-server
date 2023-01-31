@@ -4,6 +4,8 @@ import br.com.jaa.server.features.usuario.repositories.UsuarioCrudRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
@@ -36,8 +38,23 @@ public class SecurityConfig {
     @Autowired
     private SecurityHelper securityHelper;
 
+    @Autowired
+    private Environment env;
+
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        String appEnvironment = env.getProperty("app.environment");
+        if ("TEST".equals(appEnvironment)) {
+            return http
+                    .csrf().disable()
+                    .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                    .httpBasic()
+                    .and()
+                    .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and().build();
+        }
+
         return http
                 .csrf().disable()
                 .authorizeHttpRequests(
@@ -45,7 +62,7 @@ public class SecurityConfig {
                                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/javainuse-openapi/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/usuario/signup", "/usuario/signin").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/").permitAll()
-                                .anyRequest().authenticated()
+                                .anyRequest().denyAll()
 
                 )
                 .httpBasic()

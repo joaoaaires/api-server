@@ -143,6 +143,28 @@ public class ClienteServiceTest {
         Assertions.assertEquals(ClienteServiceMessageEnum.CLIENTE_NAO_ENCONTRADO.name(), objectResponseActual.getMessage());
     }
 
+    @Test
+    void delete() {
+        ClienteModel clienteModel = ClienteModelFixture.getClienteModelOld();
+
+        ObjectResponseModel<ClienteModel> objectResponseActual = clienteService.delete(clienteModel);
+
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
+        Assertions.assertNotNull(objectResponseActual.getData());
+        Assertions.assertNull(objectResponseActual.getMessage());
+    }
+
+    @Test
+    void save() {
+        ClienteModel clienteModel = ClienteModelFixture.getClienteModelOld();
+
+        ObjectResponseModel<ClienteModel> objectResponseActual = clienteService.save(clienteModel);
+
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
+        Assertions.assertNotNull(objectResponseActual.getData());
+        Assertions.assertNull(objectResponseActual.getMessage());
+    }
+
     private void assertionsObjectResponseModel(ObjectResponseModel<ClienteModel> objectResponseActual) {
         Assertions.assertEquals(HttpStatus.OK.value(), objectResponseActual.getStatus());
         Assertions.assertNotNull(objectResponseActual.getData());

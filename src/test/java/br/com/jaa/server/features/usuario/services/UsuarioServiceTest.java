@@ -7,10 +7,14 @@ import br.com.jaa.server.features.usuario.models.UsuarioModel;
 import br.com.jaa.server.features.usuario.models.UsuarioModelFixture;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.sql.Timestamp;
@@ -140,24 +144,37 @@ class UsuarioServiceTest {
         Assertions.assertNull(objectResponseActual.getData());
     }
 
-//    @Test
-//    void read() {
-//        usuarioLogged.set(UsuarioModelFixture.getUsuarioModelOld());
-//
-//        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.read();
-//
-//        assertionsObjectResponseModel(objectResponseActual);
-//    }
+    @Test
+    void read() {
+        Authentication authentication = Mockito.mock(Authentication.class);
+        Mockito.when(authentication.getPrincipal()).thenReturn(UsuarioModelFixture.getUsuarioModelOld());
 
-//    @Test
-//    void readErrorLogged() {
-//        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.read();
-//
-//        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
-//        Assertions.assertNotNull(objectResponseActual.getMessage());
-//        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_ERROR_NAO_LOGADO.name(), objectResponseActual.getMessage());
-//        Assertions.assertNull(objectResponseActual.getData());
-//    }
+        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        SecurityContextHolder.setContext(securityContext);
+
+        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.read();
+
+        assertionsObjectResponseModel(objectResponseActual);
+    }
+
+    @Test
+    void readErrorLogged() {
+        Authentication authentication = Mockito.mock(Authentication.class);
+
+        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        SecurityContextHolder.setContext(securityContext);
+
+        ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.read();
+
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
+        Assertions.assertNotNull(objectResponseActual.getMessage());
+        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_ERROR_NAO_LOGADO.name(), objectResponseActual.getMessage());
+        Assertions.assertNull(objectResponseActual.getData());
+    }
 
     @Test
     void update() throws Exception {

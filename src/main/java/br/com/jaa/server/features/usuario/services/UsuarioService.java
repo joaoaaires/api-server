@@ -150,6 +150,12 @@ public class UsuarioService {
                 );
             }
 
+            if (!(princial instanceof Usuario)) {
+                throw new ApiServerException(
+                        UsuarioServiceMessageEnum.USUARIO_ERROR_NAO_LOGADO.name()
+                );
+            }
+
             Usuario usuario = (Usuario) princial;
 
             UsuarioModel usuarioModel = UsuarioModel.fromUsuario(usuario);

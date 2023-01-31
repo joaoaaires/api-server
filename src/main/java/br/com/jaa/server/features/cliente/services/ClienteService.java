@@ -102,7 +102,7 @@ public class ClienteService {
 
         return objectResponseModelUtil.getObjectResponse(
                 HttpStatus.BAD_REQUEST,
-                null
+                clienteModel
         );
     }
 
@@ -110,7 +110,7 @@ public class ClienteService {
 
         return objectResponseModelUtil.getObjectResponse(
                 HttpStatus.BAD_REQUEST,
-                null
+                clienteModel
         );
     }
 

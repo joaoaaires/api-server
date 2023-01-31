@@ -43,7 +43,7 @@ public class SecurityHelper {
         Date dateLimit = claims.getExpiration();
         long diff = dateLimit.getTime() - System.currentTimeMillis();
         long days = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-        if (days <= (long) SecurityConst.DAYS_MINI_TOKEN) {
+        if (days <= SecurityConst.DAYS_MINI_TOKEN) {
             securityToken.generateToken(usuario.getId(), usuario.getEmail(), usuario.getPassword(), httpResponse);
         }
     }

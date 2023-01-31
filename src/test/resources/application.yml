@@ -32,3 +32,6 @@ server:
       - application/javascript
       - application/json
     min-response-size: 1024
+
+app:
+  environment: TEST
