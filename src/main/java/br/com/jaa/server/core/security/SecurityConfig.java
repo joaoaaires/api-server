@@ -33,10 +33,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 public class SecurityConfig {
 
     @Autowired
-    private UsuarioCrudRepository usuarioCrudRepository;
-
-    @Autowired
-    private SecurityHelper securityHelper;
+    private SecurityFilter securityFilter;
 
     @Autowired
     private Environment env;
@@ -70,13 +67,7 @@ public class SecurityConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .apply(
-                        SecurityDsl.securityDsl(
-                                usuarioCrudRepository,
-                                securityHelper
-                        )
-                )
-                .and()
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

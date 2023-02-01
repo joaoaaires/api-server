@@ -5,35 +5,43 @@ import br.com.jaa.server.features.usuario.entities.Usuario;
 import br.com.jaa.server.features.usuario.repositories.UsuarioCrudRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import jakarta.servlet.*;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.crypto.SecretKey;
 import java.io.IOException;
+import java.security.*;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
-public class SecurityFilter extends BasicAuthenticationFilter {
+@Component
+public class SecurityFilter extends OncePerRequestFilter {
 
-    private final UsuarioCrudRepository usuarioCrudRepository;
-    private final SecurityHelper securityHelper;
+    @Autowired
+    private UsuarioCrudRepository usuarioCrudRepository;
 
-    public SecurityFilter(
-            AuthenticationManager authenticationManager,
-            UsuarioCrudRepository usuarioCrudRepository,
-            SecurityHelper securityHelper
-    ) {
-        super(authenticationManager);
-        this.usuarioCrudRepository = usuarioCrudRepository;
-        this.securityHelper = securityHelper;
-    }
+    @Autowired
+    private SecurityHelper securityHelper;
+
+    @Autowired
+    private UsuarioLogged usuarioLogged;
+
+    private final Logger logger = LoggerFactory.getLogger(SecurityFilter.class);
 
     @Override
     protected void doFilterInternal(
@@ -42,7 +50,6 @@ public class SecurityFilter extends BasicAuthenticationFilter {
             FilterChain chain
     ) throws IOException, ServletException {
         try {
-
             String token = request.getHeader("Authorization");
 
             String[] values = securityHelper.getIdAndToken(token);
@@ -57,16 +64,26 @@ public class SecurityFilter extends BasicAuthenticationFilter {
 
             Usuario usuario = optionalUsuario.get();
 
-//            Claims claims = Jwts.parser()
-//                    .setSigningKey(usuario.getPassword().getBytes())
-//                    .parseClaimsJws(tokenBase64)
-//                    .getBody();
+            KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance("RSA");
+            keyGenerator.initialize(SignatureAlgorithm.RS512.getMinKeyLength());
 
-//            if (!id.equals(claims.getId())) {
-//                throw new ApiServerException("token não pertence a esse usuario");
-//            }
-//
-//            securityHelper.gerarNovoToken(claims, usuario, response);
+            KeyPair kp = keyGenerator.genKeyPair();
+            PublicKey publicKey = (PublicKey) kp.getPublic();
+            PrivateKey privateKey = (PrivateKey) kp.getPrivate();
+
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(publicKey)
+                    .build()
+                    .parseClaimsJws(tokenBase64)
+                    .getBody();
+
+            if (!id.equals(claims.getId())) {
+                throw new ApiServerException("token não pertence a esse usuario");
+            }
+
+            securityHelper.gerarNovoToken(claims, usuario, response);
+
+            usuarioLogged.set(usuario);
 
             List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
@@ -76,7 +93,9 @@ public class SecurityFilter extends BasicAuthenticationFilter {
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (ApiServerException ex) {
-            ex.printStackTrace();
+            logger.info("doFilterInternal", ex);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
         } finally {
             chain.doFilter(request, response);
         }

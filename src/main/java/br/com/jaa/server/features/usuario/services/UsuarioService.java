@@ -2,6 +2,7 @@ package br.com.jaa.server.features.usuario.services;
 
 import br.com.jaa.server.core.exceptio.ApiServerException;
 import br.com.jaa.server.core.security.SecurityToken;
+import br.com.jaa.server.core.security.UsuarioLogged;
 import br.com.jaa.server.core.util.ConvertUtil;
 import br.com.jaa.server.core.util.ValidationUtil;
 import br.com.jaa.server.features.shared.models.ObjectResponseModel;
@@ -39,6 +40,9 @@ public class UsuarioService {
 
     @Autowired
     private ValidationUtil validationUtil;
+
+    @Autowired
+    private UsuarioLogged usuarioLogged;
 
     public ObjectResponseModel<UsuarioModel> create(UsuarioModel usuarioModel) {
         try {
@@ -141,24 +145,13 @@ public class UsuarioService {
 
     public ObjectResponseModel<UsuarioModel> read() {
         try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            Object princial = authentication.getPrincipal();
-
-            if (princial == null) {
+            if (!usuarioLogged.isLogged()) {
                 throw new ApiServerException(
                         UsuarioServiceMessageEnum.USUARIO_ERROR_NAO_LOGADO.name()
                 );
             }
 
-            if (!(princial instanceof Usuario)) {
-                throw new ApiServerException(
-                        UsuarioServiceMessageEnum.USUARIO_ERROR_NAO_LOGADO.name()
-                );
-            }
-
-            Usuario usuario = (Usuario) princial;
-
-            UsuarioModel usuarioModel = UsuarioModel.fromUsuario(usuario);
+            UsuarioModel usuarioModel = UsuarioModel.fromUsuario(usuarioLogged);
             return objectResponseModelUtil.getObjectResponse(
                     HttpStatus.OK,
                     usuarioModel

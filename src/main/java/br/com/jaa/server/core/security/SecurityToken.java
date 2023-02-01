@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.security.*;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
@@ -30,14 +31,31 @@ public class SecurityToken {
         dateLimit = c.getTime();
 
         //GERAR TOKEN
-        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-        String token = Jwts.builder().setId(id).setIssuedAt(dateNow).setSubject(email).setExpiration(dateLimit)
-                .signWith(key).compact();
+        try {
+            KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance("RSA");
+            keyGenerator.initialize(SignatureAlgorithm.RS512.getMinKeyLength());
 
-        String idAndToken = id + ":" + token;
-        String encodedIdAndToken = Base64.getEncoder().encodeToString(idAndToken.getBytes());
+            KeyPair kp = keyGenerator.genKeyPair();
+            PublicKey publicKey = (PublicKey) kp.getPublic();
+            PrivateKey privateKey = (PrivateKey) kp.getPrivate();
 
-        httpResponse.addHeader(SecurityConst.KEY_AUTH_RESPONSE, encodedIdAndToken);
+            String encodedPublicKey = Base64.getEncoder().encodeToString(publicKey.getEncoded());
+
+            String token = Jwts.builder()
+                    .setId(id)
+                    .setSubject(email)
+                    .setIssuedAt(dateNow)
+                    .setExpiration(dateLimit)
+                    .signWith(privateKey, SignatureAlgorithm.RS512)
+                    .compact();
+
+            String idAndToken = id + ":" + token;
+            String encodedIdAndToken = Base64.getEncoder().encodeToString(idAndToken.getBytes());
+
+            httpResponse.addHeader(SecurityConst.KEY_AUTH_RESPONSE, encodedIdAndToken);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
