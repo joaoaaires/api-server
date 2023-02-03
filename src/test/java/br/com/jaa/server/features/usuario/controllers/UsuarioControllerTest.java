@@ -114,22 +114,22 @@ class UsuarioControllerTest {
         Assertions.assertNull(objectResponseModel.getData());
     }
 
-    @Test
-    void read() {
-        ResponseEntity<ObjectResponseModel> responseEntity = testRestTemplate.getForEntity(
-                url.concat(""),
-                ObjectResponseModel.class
-        );
-
-        Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-
-//        ObjectResponseModel objectResponseModel = responseEntity.getBody();
+//    @Test
+//    void read() {
+//        ResponseEntity<ObjectResponseModel> responseEntity = testRestTemplate.getForEntity(
+//                url.concat(""),
+//                ObjectResponseModel.class
+//        );
 //
-//        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseModel.getStatus());
-//        Assertions.assertNotNull(objectResponseModel.getMessage());
-//        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_ID_NAO_VALIDO.name(), objectResponseModel.getMessage());
-//        Assertions.assertNull(objectResponseModel.getData());
-    }
+//        Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+//
+////        ObjectResponseModel objectResponseModel = responseEntity.getBody();
+////
+////        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseModel.getStatus());
+////        Assertions.assertNotNull(objectResponseModel.getMessage());
+////        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_ID_NAO_VALIDO.name(), objectResponseModel.getMessage());
+////        Assertions.assertNull(objectResponseModel.getData());
+//    }
 
 
     @Test

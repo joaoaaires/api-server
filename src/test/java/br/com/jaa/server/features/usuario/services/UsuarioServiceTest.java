@@ -1,5 +1,6 @@
 package br.com.jaa.server.features.usuario.services;
 
+import br.com.jaa.server.core.security.UsuarioLogged;
 import br.com.jaa.server.features.shared.models.ObjectResponseModel;
 import br.com.jaa.server.features.usuario.UsuarioAssertions;
 import br.com.jaa.server.features.usuario.enums.UsuarioServiceMessageEnum;
@@ -31,6 +32,9 @@ class UsuarioServiceTest {
 
     @Autowired
     UsuarioService usuarioService;
+
+    @Autowired
+    UsuarioLogged usuarioLogged;
 
     @Test
     void create() {
@@ -146,13 +150,7 @@ class UsuarioServiceTest {
 
     @Test
     void read() {
-        Authentication authentication = Mockito.mock(Authentication.class);
-        Mockito.when(authentication.getPrincipal()).thenReturn(UsuarioModelFixture.getUsuarioModelOld());
-
-        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
-
-        SecurityContextHolder.setContext(securityContext);
+        usuarioLogged.set(UsuarioModelFixture.getUsuarioModelOld());
 
         ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.read();
 

@@ -185,10 +185,12 @@ public class UsuarioService {
                 return responseValidate;
             }
 
-            Usuario usuario = usuarioCrudRepository.findByEmail(email);
-            if (usuario == null) {
+            Optional<Usuario> optionalUsuario = usuarioCrudRepository.findByEmail(email);
+            if (optionalUsuario.isEmpty()) {
                 throw new ApiServerException(UsuarioServiceMessageEnum.USUARIO_INFO_INVALIDA.name());
             }
+
+            Usuario usuario = optionalUsuario.get();
 
             boolean isPasswordMatch = passwordEncoder.matches(password, usuario.getPassword());
             if (!isPasswordMatch) {

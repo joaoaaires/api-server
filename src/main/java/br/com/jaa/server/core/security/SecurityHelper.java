@@ -3,6 +3,7 @@ package br.com.jaa.server.core.security;
 import br.com.jaa.server.core.exceptio.ApiServerException;
 import br.com.jaa.server.features.usuario.entities.Usuario;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -46,6 +47,10 @@ public class SecurityHelper {
         if (days <= SecurityConst.DAYS_MINI_TOKEN) {
             securityToken.generateToken(usuario.getId(), usuario.getEmail(), usuario.getPassword(), httpResponse);
         }
+    }
+
+    public Claims decodeToken(String token, String passwordEncode) {
+        return securityToken.decodeToken(token, passwordEncode);
     }
 
 }

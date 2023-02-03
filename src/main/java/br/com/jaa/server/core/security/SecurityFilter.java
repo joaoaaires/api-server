@@ -18,6 +18,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -64,19 +66,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
             Usuario usuario = optionalUsuario.get();
 
-            KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance("RSA");
-            keyGenerator.initialize(SignatureAlgorithm.RS512.getMinKeyLength());
-
-            KeyPair kp = keyGenerator.genKeyPair();
-            PublicKey publicKey = (PublicKey) kp.getPublic();
-            PrivateKey privateKey = (PrivateKey) kp.getPrivate();
-
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(publicKey)
-                    .build()
-                    .parseClaimsJws(tokenBase64)
-                    .getBody();
-
+            Claims claims = securityHelper.decodeToken(tokenBase64, usuario.getPassword());
             if (!id.equals(claims.getId())) {
                 throw new ApiServerException("token não pertence a esse usuario");
             }
@@ -87,15 +77,14 @@ public class SecurityFilter extends OncePerRequestFilter {
 
             List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    usuario,
+                    null,
                     null,
                     authorities
             );
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (ApiServerException ex) {
             logger.info("doFilterInternal", ex);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
         } finally {
             chain.doFilter(request, response);
         }

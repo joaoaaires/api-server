@@ -1,12 +1,12 @@
 package br.com.jaa.server.core.security;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
 import java.security.*;
 import java.util.Base64;
 import java.util.Calendar;
@@ -31,31 +31,36 @@ public class SecurityToken {
         dateLimit = c.getTime();
 
         //GERAR TOKEN
+        String token = Jwts.builder()
+                .setId(id)
+                .setSubject(email)
+                .setIssuedAt(dateNow)
+                .setExpiration(dateLimit)
+                .signWith(getSignKey(passwordEncode), SignatureAlgorithm.HS256)
+                .compact();
+
+        String idAndToken = id + ":" + token;
+        String encodedIdAndToken = Base64.getEncoder().encodeToString(idAndToken.getBytes());
+
+        httpResponse.addHeader(SecurityConst.KEY_AUTH_RESPONSE, encodedIdAndToken);
+    }
+
+    public Claims decodeToken(String token, String passwordEncode) {
+        return Jwts
+                .parserBuilder()
+                .setSigningKey(getSignKey(passwordEncode))
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    private Key getSignKey(String passwordEncode) {
         try {
-            KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance("RSA");
-            keyGenerator.initialize(SignatureAlgorithm.RS512.getMinKeyLength());
-
-            KeyPair kp = keyGenerator.genKeyPair();
-            PublicKey publicKey = (PublicKey) kp.getPublic();
-            PrivateKey privateKey = (PrivateKey) kp.getPrivate();
-
-            String encodedPublicKey = Base64.getEncoder().encodeToString(publicKey.getEncoded());
-
-            String token = Jwts.builder()
-                    .setId(id)
-                    .setSubject(email)
-                    .setIssuedAt(dateNow)
-                    .setExpiration(dateLimit)
-                    .signWith(privateKey, SignatureAlgorithm.RS512)
-                    .compact();
-
-            String idAndToken = id + ":" + token;
-            String encodedIdAndToken = Base64.getEncoder().encodeToString(idAndToken.getBytes());
-
-            httpResponse.addHeader(SecurityConst.KEY_AUTH_RESPONSE, encodedIdAndToken);
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] keyBytes = md.digest(passwordEncode.getBytes());
+            return Keys.hmacShaKeyFor(keyBytes);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
     }
-
 }
