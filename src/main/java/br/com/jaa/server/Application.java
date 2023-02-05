@@ -23,10 +23,10 @@ import java.util.TimeZone;
         type = SecuritySchemeType.APIKEY,
         in = SecuritySchemeIn.HEADER
 )
-public class ServerApplication {
+public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(ServerApplication.class, args);
+        SpringApplication.run(Application.class, args);
     }
 
     @PostConstruct

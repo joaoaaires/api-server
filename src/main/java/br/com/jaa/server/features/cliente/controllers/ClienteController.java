@@ -3,7 +3,6 @@ package br.com.jaa.server.features.cliente.controllers;
 import br.com.jaa.server.features.cliente.models.ClienteModel;
 import br.com.jaa.server.features.cliente.services.ClienteService;
 import br.com.jaa.server.features.shared.models.ObjectResponseModel;
-import br.com.jaa.server.features.usuario.models.UsuarioModel;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

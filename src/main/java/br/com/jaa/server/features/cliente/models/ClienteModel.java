@@ -1,8 +1,6 @@
 package br.com.jaa.server.features.cliente.models;
 
 import br.com.jaa.server.features.cliente.entities.Cliente;
-import br.com.jaa.server.features.usuario.entities.Usuario;
-import br.com.jaa.server.features.usuario.models.UsuarioModel;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
