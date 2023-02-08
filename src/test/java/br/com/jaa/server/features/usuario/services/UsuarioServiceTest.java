@@ -8,14 +8,10 @@ import br.com.jaa.server.features.usuario.models.UsuarioModel;
 import br.com.jaa.server.features.usuario.models.UsuarioModelFixture;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.sql.Timestamp;
@@ -87,6 +83,7 @@ class UsuarioServiceTest {
         Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_CADASTRADO.name(), objectResponseActual.getMessage());
     }
 
+
     @Test
     void readById() {
         UsuarioModel usuarioExpected = UsuarioModelFixture.getUsuarioModelOld();
@@ -96,7 +93,12 @@ class UsuarioServiceTest {
         );
 
         assertionsObjectResponseModel(objectResponseActual);
+
+        UsuarioModel usuarioActual = objectResponseActual.getData();
+
+        Assertions.assertEquals(usuarioActual.getId(), usuarioExpected.getId());
     }
+
 
     @Test
     void readByIdZeroNotFound() {
@@ -159,13 +161,6 @@ class UsuarioServiceTest {
 
     @Test
     void readErrorLogged() {
-        Authentication authentication = Mockito.mock(Authentication.class);
-
-        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
-
-        SecurityContextHolder.setContext(securityContext);
-
         ObjectResponseModel<UsuarioModel> objectResponseActual = usuarioService.read();
 
         Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseActual.getStatus());
@@ -174,10 +169,11 @@ class UsuarioServiceTest {
         Assertions.assertNull(objectResponseActual.getData());
     }
 
+
     @Test
     void update() throws Exception {
         UsuarioModel usuarioExpected = UsuarioModelFixture.getUsuarioModelOld();
-        usuarioExpected.setPassword("123321");
+        usuarioExpected.setPassword("123");
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Timestamp dataHoraAlt = new Timestamp(formatter.parse("2022-05-02 12:09:00").getTime());
         usuarioExpected.setDataHoraAlt(dataHoraAlt);
@@ -186,6 +182,7 @@ class UsuarioServiceTest {
 
         assertionsObjectResponseModel(objectResponseActual);
     }
+
 
     @Test
     void updateIdError() throws Exception {
@@ -203,7 +200,6 @@ class UsuarioServiceTest {
         Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_NAO_ENCONTRADO.name(), objectResponseActual.getMessage());
         Assertions.assertNull(objectResponseActual.getData());
     }
-
     @Test
     void delete() throws Exception {
         UsuarioModel usuarioExpected = UsuarioModelFixture.getUsuarioModelOld();

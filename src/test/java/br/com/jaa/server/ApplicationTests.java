@@ -5,12 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ServerApplicationTests {
+class  ApplicationTests {
 
 	@Test
 	void contextLoads() {
 		String start = "OK";
-		ServerApplication.main(new String[] {});
+		Application.main(new String[] {});
 		Assertions.assertEquals("OK", start);
 	}
 

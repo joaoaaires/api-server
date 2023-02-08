@@ -1,6 +1,5 @@
 package br.com.jaa.server.core.util;
 
-import br.com.jaa.server.core.exceptio.ApiServerRuntimeException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

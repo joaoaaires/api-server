@@ -31,11 +31,11 @@ CREATE TABLE IF NOT EXISTS `usuario` (
 
 -- Copiando dados para a tabela api_test.usuario: ~5 rows (aproximadamente)
 INSERT INTO `usuario` (`id`, `email`, `password`, `situacao`, `datahorasyc`, `datahorainc`, `datahoraalt`, `datahoradel`) VALUES
-	(1, 'lobortis.augue@aol.edu', '123321', 0, '2022-05-18 16:42:01', '2022-05-18 16:43:02', '2022-05-18 16:44:03', '2022-05-18 16:45:04'),
-	(2, 'pede.malesuada@aol.ca', '$2a$10$9PW4.CwlS8iGsVcPlHkmWeBZhyxjEZioHhEN9z6mw/B10BMxmNwdK', 0, '2022-05-18 16:42:01', '2022-05-18 16:43:02', '2022-05-18 16:44:03', '2022-05-18 16:45:04'),
-	(3, 'pretium.et@outlook.ca', '123321', 0, '2022-05-18 16:42:01', '2022-05-18 16:43:02', '2022-05-18 16:44:03', '2022-05-18 16:45:04'),
-	(4, 'etiam.gravida@google.ca', '123321', 0, '2022-05-18 16:42:01', '2022-05-18 16:43:02', '2022-05-18 16:44:03', '2022-05-18 16:45:04'),
-	(5, 'eu.lacus@icloud.ca', '123321', 0, '2022-05-18 16:42:01', '2022-05-18 16:43:02', '2022-05-18 16:44:03', '2022-05-18 16:45:04');
+	(1, 'lobortis.augue@aol.edu', '$2a$10$bnlP4puHInLFra1/HcdK/OC7p6I9PTumKwV5zkEVLcH46ERQsdE1K', 0, '2022-05-18 16:42:01', '2022-05-18 16:43:02', '2022-05-18 16:44:03', '2022-05-18 16:45:04'),
+	(2, 'pede.malesuada@aol.ca', '$2a$10$bnlP4puHInLFra1/HcdK/OC7p6I9PTumKwV5zkEVLcH46ERQsdE1K', 0, '2022-05-18 16:42:01', '2022-05-18 16:43:02', '2022-05-18 16:44:03', '2022-05-18 16:45:04'),
+	(3, 'pretium.et@outlook.ca', '$2a$10$bnlP4puHInLFra1/HcdK/OC7p6I9PTumKwV5zkEVLcH46ERQsdE1K', 0, '2022-05-18 16:42:01', '2022-05-18 16:43:02', '2022-05-18 16:44:03', '2022-05-18 16:45:04'),
+	(4, 'etiam.gravida@google.ca', '$2a$10$bnlP4puHInLFra1/HcdK/OC7p6I9PTumKwV5zkEVLcH46ERQsdE1K', 0, '2022-05-18 16:42:01', '2022-05-18 16:43:02', '2022-05-18 16:44:03', '2022-05-18 16:45:04'),
+	(5, 'eu.lacus@icloud.ca', '$2a$10$bnlP4puHInLFra1/HcdK/OC7p6I9PTumKwV5zkEVLcH46ERQsdE1K', 0, '2022-05-18 16:42:01', '2022-05-18 16:43:02', '2022-05-18 16:44:03', '2022-05-18 16:45:04');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

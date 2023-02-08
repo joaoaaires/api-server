@@ -1,7 +1,5 @@
 package br.com.jaa.server.features.cliente.models;
 
-import br.com.jaa.server.features.cliente.entities.Cliente;
-
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;

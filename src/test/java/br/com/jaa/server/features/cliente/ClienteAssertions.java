@@ -1,7 +1,6 @@
 package br.com.jaa.server.features.cliente;
 
 import br.com.jaa.server.features.cliente.models.ClienteModel;
-import br.com.jaa.server.features.usuario.models.UsuarioModel;
 import org.junit.jupiter.api.Assertions;
 
 public class ClienteAssertions {
