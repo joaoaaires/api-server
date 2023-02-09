@@ -36,7 +36,8 @@ public class IndexControllerTest {
     @Test
     void index() throws Exception {
         ResponseEntity<ObjectResponseModel> responseEntity = testRestTemplate.getForEntity(
-                url, ObjectResponseModel.class
+                url,
+                ObjectResponseModel.class
         );
 
         Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -50,20 +51,18 @@ public class IndexControllerTest {
 
     @Test
     void test() {
-//        ResponseEntity<ObjectResponseModel> responseEntity = testRestTemplate.exchange(
-//                url.concat("test"),
-//                HttpMethod.GET,
-//                new TokenFixture().getHttpEntityToken(),
-//                ObjectResponseModel.class
-//        );
-//
-//        Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-//
-//        ObjectResponseModel objectResponseModel = responseEntity.getBody();
-//
-//        Assertions.assertEquals(HttpStatus.OK.value(), objectResponseModel.getStatus());
-//        Assertions.assertNotNull(objectResponseModel.getData());
-//        Assertions.assertNotNull(objectResponseModel.getMessage());
+        ResponseEntity<ObjectResponseModel> responseEntity = testRestTemplate.getForEntity(
+                url.concat("test"),
+                ObjectResponseModel.class
+        );
+
+        Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+        ObjectResponseModel objectResponseModel = responseEntity.getBody();
+
+        Assertions.assertEquals(HttpStatus.OK.value(), objectResponseModel.getStatus());
+        Assertions.assertNotNull(objectResponseModel.getData());
+        Assertions.assertNotNull(objectResponseModel.getMessage());
     }
 
 }
