@@ -143,7 +143,8 @@ public class UsuarioService {
 
     public ObjectResponseModel<UsuarioModel> read() {
         try {
-            if (!usuarioLogged.isLogged()) {
+            boolean isLogged = usuarioLogged.isLogged().booleanValue();
+            if (!isLogged) {
                 throw new ApiServerException(
                         UsuarioServiceMessageEnum.USUARIO_ERROR_NAO_LOGADO.name()
                 );

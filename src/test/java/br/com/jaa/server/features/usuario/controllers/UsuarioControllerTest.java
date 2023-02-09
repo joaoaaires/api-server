@@ -1,5 +1,6 @@
 package br.com.jaa.server.features.usuario.controllers;
 
+import br.com.jaa.server.core.security.UsuarioLogged;
 import br.com.jaa.server.features.shared.models.ObjectResponseModel;
 import br.com.jaa.server.features.usuario.enums.UsuarioServiceMessageEnum;
 import br.com.jaa.server.features.usuario.models.UsuarioModel;
@@ -7,8 +8,10 @@ import br.com.jaa.server.features.usuario.models.UsuarioModelFixture;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -35,6 +38,9 @@ class UsuarioControllerTest {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
+
+    @MockBean
+    private UsuarioLogged usuarioLogged;
 
     private String url;
 
@@ -108,22 +114,35 @@ class UsuarioControllerTest {
         Assertions.assertNull(objectResponseModel.getData());
     }
 
-//    @Test
-//    void read() {
-//        ResponseEntity<ObjectResponseModel> responseEntity = testRestTemplate.getForEntity(
-//                url.concat(""),
-//                ObjectResponseModel.class
-//        );
-//
-//        Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-//
-//        ObjectResponseModel objectResponseModel = responseEntity.getBody();
-//
-////        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), objectResponseModel.getStatus());
-////        Assertions.assertNotNull(objectResponseModel.getMessage());
-////        Assertions.assertEquals(UsuarioServiceMessageEnum.USUARIO_ID_NAO_VALIDO.name(), objectResponseModel.getMessage());
-////        Assertions.assertNull(objectResponseModel.getData());
-//    }
+    @Test
+    void read() {
+        Mockito.when(usuarioLogged.isLogged()).thenReturn(true);
+
+        UsuarioModel usuarioModel = UsuarioModelFixture.getUsuarioModelOld();
+        Mockito.when(usuarioLogged.getId()).thenReturn(usuarioModel.getId());
+        Mockito.when(usuarioLogged.getEmail()).thenReturn(usuarioModel.getEmail());
+        Mockito.when(usuarioLogged.getSituacao()).thenReturn(usuarioModel.getSituacao());
+        Mockito.when(usuarioLogged.getDataHoraSyc()).thenReturn(usuarioModel.getDataHoraSyc());
+
+        ResponseEntity<ObjectResponseModel> responseEntity = testRestTemplate.getForEntity(
+                url.concat(""),
+                ObjectResponseModel.class
+        );
+
+        Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+        ObjectResponseModel objectResponseModel = responseEntity.getBody();
+
+        Assertions.assertEquals(HttpStatus.OK.value(), objectResponseModel.getStatus());
+        Assertions.assertNotNull(objectResponseModel.getData());
+
+        Map<String, Object> data = (Map<String, Object>) objectResponseModel.getData();
+
+        Assertions.assertEquals(4, data.size());
+        Assertions.assertEquals(usuarioModel.getId().intValue(), data.get("id"));
+        Assertions.assertEquals(usuarioModel.getEmail(), data.get("email"));
+        Assertions.assertEquals(usuarioModel.getSituacao(), data.get("situacao"));
+    }
 
 
     @Test
