@@ -27,13 +27,12 @@ public class SecurityConfig {
 
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        String appEnvironment = environment.getProperty("app.environment");
+        String appEnvironment =  environment.getProperty("app.environment");
         if ("TEST".equals(appEnvironment)) {
             return http
                     .csrf().disable()
                     .authorizeHttpRequests(
                             auth -> auth.anyRequest().permitAll()
-
                     )
                     .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

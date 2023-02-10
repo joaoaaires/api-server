@@ -1,6 +1,8 @@
 spring:
   main:
     allow-bean-definition-overriding: true
+  jackson:
+    property-naming-strategy: LOWER_CASE
   datasource:
     url: jdbc:mariadb://localhost:3306/api?allowPublicKeyRetrieval=true&useSSL=false
     username: root

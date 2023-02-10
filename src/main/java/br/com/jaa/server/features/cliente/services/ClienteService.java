@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.Optional;
 
 @Service
@@ -31,6 +32,8 @@ public class ClienteService {
             }
 
             clienteModel.setId(null);
+
+            clienteModel.setDataHoraInc(new Timestamp(System.currentTimeMillis()));
 
             Cliente cliente = clienteCrudRepository.save((Cliente) clienteModel);
             clienteModel = ClienteModel.fromCliente(cliente);
